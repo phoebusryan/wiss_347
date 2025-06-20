@@ -474,7 +474,3 @@ kubectl apply -f c:\kubetools\mediawiki-ingress.yaml
 - Im Browser http://mediawiki.localhost aufrufen
 
 Im Terminal sollte man 2 laufende Pods sehen. Im Browser sollte das Web-Setup kommen. Soweit so gut; das Setup liesse sich auch ausführen aber das möchte man ja nicht jedes Mal machen. Wir müssen also noch Ergänzungen machen, damit das ganze persistent ist.
-
-#### 5. Persistenz
-
-##### 1. PVC erstellen
