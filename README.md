@@ -68,3 +68,20 @@ Anschliessend ein Terminal (CMD oder PowerShell) öffnen und mit folgendem Befeh
 ```powershell
 helm version
 ```
+
+### Kubernetes-Cluster starten
+
+Zum Abschluss muss der lokale **Kubernetes-Cluster** über Minikube gestartet werden. Dies geschieht mit folgendem Befehl:
+
+```powershell
+minikube start --driver=docker
+```
+Beim ersten Start kann der Vorgang etwa 5–10 Minuten dauern, da notwendige Komponenten und Images heruntergeladen werden.
+
+Sollte eine Fehlermeldung erscheinen, liegt das in den meisten Fällen daran, dass Docker nicht läuft – in diesem Fall Docker Desktop zuerst starten und es erneut versuchen.
+
+Nach erfolgreichem Start ein neues Terminal (CMD oder PowerShell) öffnen und zur Überprüfung folgenden Befehl ausführen:
+```powershell
+kubectl get nodes
+```
+Wenn ein Node mit dem Status Ready angezeigt wird, ist die Basisinstallation abgeschlossen und der Kubernetes-Cluster läuft einsatzbereit.
