@@ -80,7 +80,7 @@ Beim ersten Start kann der Vorgang etwa 5–10 Minuten dauern, da notwendige Kom
 
 Sollte eine Fehlermeldung erscheinen, liegt das in den meisten Fällen daran, dass Docker nicht läuft – in diesem Fall Docker Desktop zuerst starten und es erneut versuchen.
 
-Nach erfolgreichem Start ein neues Terminal (CMD oder PowerShell) öffnen und zur Überprüfung folgenden Befehl ausführen:
+Nach erfolgreichem Start zur Überprüfung folgenden Befehl ausführen:
 ```powershell
 kubectl get nodes
 ```
