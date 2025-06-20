@@ -262,23 +262,20 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: wordpress-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/use-forwarded-headers: "true"
 spec:
   ingressClassName: nginx
   rules:
-    - host: localhost
+    - host: wordpress.localhost
       http:
         paths:
-          - path: /wordpress(/|$)(.*)
-            pathType: ImplementationSpecific
+          - path: /
+            pathType: Prefix
             backend:
               service:
                 name: wiss-wordpress
                 port:
                   number: 80
+
 
 ```
 
@@ -287,22 +284,6 @@ Anschliessend kannst du die Datei laden via Terminal mit Hilfe von `kubectl` an 
 kubectl apply -f c:\kubetools\wordpress-ingress.yaml
 ```
 
-Danach kann man `http://localhost/wordpress` im Browser aufrufen, hat aber das Problem, dass Assets wie Bilder, Stylesheets etc. fehlen. Um dies zu lösen kann man folgende Schritte tun:
+Nun benötigt man das ganz normale `Notepad` von Windows, welches aber mit **Administrationsrechten** gestartet werden muss. Dann öffnet man die Datei `C:\Windows\System32\drivers\etc\hosts` und fügt dort den Eintrag `127.0.0.1 wordpress.localost` ein und speichert die Datei.
 
-```powershell
-kubectl get pods
-```
-
-Dabei erhält man den Namen des Pods, wo Wordpress drauf läuft. Man benötigt denjenigen **ohne** das mariadb-suffix. Zum Beispiel: `wiss-wordpress-758544f796-tvfw6`
-
-Dann kann man in der Konsole folgendes eingeben:
-```powershell
-kubectl exec -it wiss-wordpress-758544f796-tvfw6 -- bash
-```
-.. damit geht man in den eigentlichen Pod rein und ist in der Bash. Dort kann man den Pfad ändern
-```powershell
-sed -i 's/define.*WP_HOME.*/\/\/&/' /bitnami/wordpress/wp-config.php
-sed -i 's/define.*WP_SITEURL.*/\/\/&/' /bitnami/wordpress/wp-config.php
-wp option update home http://localhost/wordpress
-wp option update siteurl http://localhost/wordpress
-```
+Nun sollte man im Browser auf `http://wordpress.localhost` kommen und alles normal nutzen können
