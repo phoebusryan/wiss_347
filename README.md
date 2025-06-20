@@ -184,3 +184,125 @@ Nach erfolgreichem Start zur Überprüfung folgenden Befehl ausführen:
 kubectl get nodes
 ```
 Wenn ein Node mit dem Status Ready angezeigt wird, ist die Basisinstallation abgeschlossen und der Kubernetes-Cluster läuft einsatzbereit.
+
+## Ingress (Reverse proxy) installieren
+Das ist ganz simpel mit einem einzigen Terminal-Befehl:
+```powershell
+minikube addons enable ingress
+```
+Anschliessend muss ingress noch gestartet werden:
+```powershell
+minikube tunnel
+```
+Das sorgt dafür, dass `localhost` korrekt auf den Ingress zeigt. Das Fenster muss offen bleiben, solange du testest.
+
+## WordPress mit Helm installieren
+
+Die erste Anwendung, die im Kubernetes-Cluster installiert wird, ist **WordPress**. Dafür wird das offizielle Helm-Chart von **Bitnami** verwendet, welches neben WordPress auch eine MariaDB-Datenbank und die nötigen Volumes bereitstellt.
+
+### Schritte
+
+#### 1. Helm-Repository von Bitnami hinzufügen:
+
+```powershell
+helm repo add bitnami https://charts.bitnami.com/bitnami
+```
+
+#### 2. Helm-Repositories aktualisieren:
+```powershell
+helm repo update
+```
+
+#### 3. WordPress installieren:
+Quelle: https://github.com/bitnami/charts/tree/main/bitnami/wordpress
+https://artifacthub.io/packages/helm/bitnami/wordpress
+
+```powershell
+helm install wiss-wordpress bitnami/wordpress --set service.type=ClusterIP
+```
+
+Dieser Befehl installiert:
+- WordPress-Pod
+- MariaDB-Pod
+- Zwei Persistent Volume Claims (PVCs) – für WordPress-Daten und Datenbank
+- Interne Services (ClusterIP)
+
+Das `wiss-wordpress` ist das Prefix für die Pods, die erstellt werden. Das ist zur späteren identifizierung sinnvoll und vorallem dann, wenn es mehrere Wordpress-Installationen geben würde.
+
+
+Er legt zudem direkt einen Adminbenutzer und zeigt, wie man an die Zugangsdaten des Benutzers kommt:
+```powershell
+echo Username: user
+echo Password: $(kubectl get secret --namespace default wordpress -o jsonpath="{.data.wordpress-username}" | base64 --d)
+```
+Der Benutzername lautet also `user`. Beim Passwort kommt höchstwahrscheinlich ein Fehler, der sagt, dass `base64` nicht installiert ist. Mit einer kurzen Googlerecherche findet man einen alternativen Befehl für Powershell, der funktioniert, da Powershell eine Integration von base64 hat.
+```powershell
+[System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String((kubectl get secret --namespace default wordpress -o jsonpath="{.data.wordpress-password}")))
+```
+
+#### 4. Installation prüfen:
+
+```powershell
+kubectl get pods
+```
+
+Die Ausgabe zeigt die laufenden Pods. Es kann einige Minuten dauern, bis beide Pods den Status `Running` und `Ready` erreichen. Währenddessen kann der Befehl mehrfach ausgeführt werden. In dem Fall muss die Ausgabe zwei Pods ergeben, die beide mit dem Prefix `wordpress-` beginnen.
+
+Mit dem nachfolgenden Befehl kann man temporär einen `Port-Forwarder` erstellen, sodass Wordpress unter `http://localhost:8080` laufen sollte:
+```powershell
+kubectl port-forward svc/wiss-wordpress 8080:80
+```
+
+#### 5. Ingress für Wordpress 
+Damit WordPress über den Browser auch via Domain, Url oder Subdirectory aufgerufen werden kann (z. B. unter `http://localhost/wordpress`), wird ein Ingress-Objekt erstellt, das Anfragen korrekt an den WordPress-Service weiterleitet.
+
+Erstelle nun im Ordner `c:\kubetools` eine Datei namens `wordpress-ingress.yaml` mit folgendem Inhalt:
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wordpress-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/use-forwarded-headers: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: localhost
+      http:
+        paths:
+          - path: /wordpress(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: wiss-wordpress
+                port:
+                  number: 80
+
+```
+
+Anschliessend kannst du die Datei laden via Terminal mit Hilfe von `kubectl` an `ingress` übergeben.
+```powershell
+kubectl apply -f c:\kubetools\wordpress-ingress.yaml
+```
+
+Danach kann man `http://localhost/wordpress` im Browser aufrufen, hat aber das Problem, dass Assets wie Bilder, Stylesheets etc. fehlen. Um dies zu lösen kann man folgende Schritte tun:
+
+```powershell
+kubectl get pods
+```
+
+Dabei erhält man den Namen des Pods, wo Wordpress drauf läuft. Man benötigt denjenigen **ohne** das mariadb-suffix. Zum Beispiel: `wiss-wordpress-758544f796-tvfw6`
+
+Dann kann man in der Konsole folgendes eingeben:
+```powershell
+kubectl exec -it wiss-wordpress-758544f796-tvfw6 -- bash
+```
+.. damit geht man in den eigentlichen Pod rein und ist in der Bash. Dort kann man den Pfad ändern
+```powershell
+sed -i 's/define.*WP_HOME.*/\/\/&/' /bitnami/wordpress/wp-config.php
+sed -i 's/define.*WP_SITEURL.*/\/\/&/' /bitnami/wordpress/wp-config.php
+wp option update home http://localhost/wordpress
+wp option update siteurl http://localhost/wordpress
+```
