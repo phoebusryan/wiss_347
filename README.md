@@ -215,7 +215,6 @@ helm repo update
 
 #### 3. WordPress installieren:
 Quelle: https://github.com/bitnami/charts/tree/main/bitnami/wordpress
-https://artifacthub.io/packages/helm/bitnami/wordpress
 
 ```powershell
 helm install wiss-wordpress bitnami/wordpress --set service.type=ClusterIP
@@ -287,3 +286,161 @@ kubectl apply -f c:\kubetools\wordpress-ingress.yaml
 Nun benötigt man das ganz normale `Notepad` von Windows, welches aber mit **Administrationsrechten** gestartet werden muss. Dann öffnet man die Datei `C:\Windows\System32\drivers\etc\hosts` und fügt dort den Eintrag `127.0.0.1 wordpress.localost` ein und speichert die Datei.
 
 Nun sollte man im Browser auf `http://wordpress.localhost` kommen und alles normal nutzen können
+
+## 4. MediaWiki installieren:
+
+Die zweite Anwendung, die im Kubernetes-Cluster bereitgestellt wird, ist MediaWiki. Ursprünglich hatte ich geplant, die Installation über ein Helm-Chart durchzuführen. Allerdings sind die verfügbaren Charts grösstenteils veraltet und als **"**deprecated**"** gekennzeichnet. Aufgrund der offiziellen Empfehlung, von deren Nutzung abzusehen, habe ich mich entschieden, MediaWiki manuell zu deployen. Selbst wenn ein veraltetes Chart technisch noch funktionieren würde, wären damit sicherheitsrelevante Risiken verbunden.
+
+### Schritte
+
+#### 1. Eigenen Namespace erstellen:
+
+```powershell
+kubectl create namespace mediawiki
+```
+
+#### 2. Configdateien erstellen:
+Die nachfolgenden 3 Configdateien habe ich von ChatGPT generieren lassen aber gemäss ChatGPT findet man dieser mehr oder weniger identisch in der Dokumentation von MediaWiki. Danach kommt wieder die Ingress-Konfiguration analog derjenigen von Wordpress weiter oben.
+
+##### 1. mariadb-deployment.yaml
+Datei mit dem Namen `mariadb-deployment.yaml` erstellen und unter `C:\kubetools` speichern. Nachfolgend der Inhalt:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+  namespace: mediawiki
+spec:
+  selector:
+    matchLabels:
+      app: mariadb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+        - name: mariadb
+          image: mariadb:10.11
+          env:
+            - name: MARIADB_ROOT_PASSWORD
+              value: wikisecret
+            - name: MARIADB_DATABASE
+              value: wikidb
+            - name: MARIADB_USER
+              value: wiki
+            - name: MARIADB_PASSWORD
+              value: wikipass
+          ports:
+            - containerPort: 3306
+```
+
+##### 2. mediawiki-deployment.yaml
+Datei mit dem Namen `mediawiki-deployment.yaml` erstellen und unter `C:\kubetools` speichern. Nachfolgend der Inhalt:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mediawiki
+  namespace: mediawiki
+spec:
+  selector:
+    matchLabels:
+      app: mediawiki
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mediawiki
+    spec:
+      containers:
+        - name: mediawiki
+          image: mediawiki:1.42.1
+          env:
+            - name: MEDIAWIKI_DB_TYPE
+              value: mysql
+            - name: MEDIAWIKI_DB_HOST
+              value: mariadb
+            - name: MEDIAWIKI_DB_NAME
+              value: wikidb
+            - name: MEDIAWIKI_DB_USER
+              value: wiki
+            - name: MEDIAWIKI_DB_PASSWORD
+              value: wikipass
+          ports:
+            - containerPort: 80
+```
+
+##### 3. mediawiki-service.yaml
+Datei mit dem Namen `mediawiki-service.yaml` erstellen und unter `C:\kubetools` speichern. Nachfolgend der Inhalt:
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mediawiki
+  namespace: mediawiki
+spec:
+  selector:
+    app: mediawiki
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb
+  namespace: mediawiki
+spec:
+  selector:
+    app: mariadb
+  ports:
+    - port: 3306
+      targetPort: 3306
+  type: ClusterIP
+
+```
+
+##### 4. mediawiki-ingress.yaml
+Datei mit dem Namen `mediawiki-ingress.yaml` erstellen und unter `C:\kubetools` speichern. Nachfolgend der Inhalt:
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mediawiki-ingress
+  namespace: mediawiki
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: mediawiki.localhost
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: mediawiki
+                port:
+                  number: 80
+```
+#### 3. Installation:
+Die Installation könnte nicht einfacher sein. Einfach ein Terminal öffnen und die nachfolgenden Befehle kopieren. So werden die gerade erstellten Dateien geladen.
+
+```powershell
+kubectl apply -f c:\kubetools\mariadb-deployment.yaml
+kubectl apply -f c:\kubetools\mediawiki-deployment.yaml
+kubectl apply -f c:\kubetools\mediawiki-service.yaml
+kubectl apply -f c:\kubetools\mediawiki-ingress.yaml
+```
+
+#### 4. Testen:
+- Im Terminal `kubectl get pods -n mediawiki`
+- Im Browser http://mediawiki.localhost aufrufen
