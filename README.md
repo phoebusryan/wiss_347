@@ -17,6 +17,7 @@ Die Firma legt grossen Wert auf **Skalierbarkeit**, **Zuverlässigkeit** und **Z
 - **Kubernetes** ist eine Open-Source-Plattform zur automatisierten Verwaltung, Skalierung und Bereitstellung von containerisierten Anwendungen.
 - **Minikube** ist ein Tool, mit dem man einen lokalen Kubernetes-Cluster auf dem eigenen Rechner starten und testen kann.
 - **Docker** ist eine Plattform, mit der Anwendungen in isolierten Containern verpackt, verteilt und ausgeführt werden können.
+- **kubectl** ist das Kommandozeilenwerkzeug, mit dem man Kubernetes-Cluster verwaltet und Befehle an den Cluster senden kann.
 - **Helm** ist ein Paketmanager für Kubernetes, mit dem Anwendungen samt ihrer Konfiguration einfach installiert und verwaltet werden können.
 
 ## Aufsetzen der Basis-Infrastruktur
@@ -27,9 +28,14 @@ Zunächst wird **Docker Desktop** installiert, inklusive des benötigten **Windo
 Beim ersten Start kann eine Aufforderung zur Aktualisierung von WSL erscheinen – diese sollte unbedingt bestätigt werden. Anschliessend Docker starten und sicherstellen, dass der Dienst läuft. Der optional angebotene Docker-Account bzw. Sign-Up-Prozess kann übersprungen werden.
 
 ### Minikube installieren
-Als nächstes muss die Anwendung **Minikube** installiert werden. Minikube ermöglicht es, einen lokalen Kubernetes-Cluster auszuführen. Der benötigte Installer trägt den Namen `minikube-installer`.
+Als nächstes muss die Anwendung **Minikube** installiert werden. Minikube ermöglicht es, einen lokalen Kubernetes-Cluster auszuführen. Der benötigte Installer trägt den Namen `minikube-installer.exe`.
 
 Die aktuelle Version kann auf der offiziellen Website heruntergeladen werden:  
 [https://minikube.sigs.k8s.io/docs/start/](https://minikube.sigs.k8s.io/docs/start/)
 
 Nach dem Download einfach die Installationsdatei ausführen und den Anweisungen folgen.
+
+### Kubectl installieren
+**Kubectl** muss nicht direkt installiert werden, sondern einfach heruntergeladen und verknüpft werden. Die dafür benötigte Datei `kubectl.exe` findet man unter nachfolgendem Link: https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/
+
+Erstelle einen Ordner C:\kubetools und kopiere die heruntergeladene Datei da rein.
