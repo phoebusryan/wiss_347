@@ -18,6 +18,10 @@ Die Firma legt grossen Wert auf **Skalierbarkeit**, **Zuverlässigkeit** und **Z
 
 Die Abbildung zeigt die geplante Infrastruktur für das Kubernetes-Projekt. Alle Komponenten laufen innerhalb eines lokalen Kubernetes-Nodes (Minikube). Der Zugriff erfolgt zentral über einen **Ingress-Controller** auf Basis von **nginx**, der als Reverse Proxy fungiert und die eingehenden Anfragen an die entsprechenden Dienste weiterleitet.
 
+### Warum Kubernetes?
+
+Kubernetes bietet gegenüber klassischen Containerlösungen wie Docker Compose deutliche Vorteile in Bezug auf Skalierbarkeit, Wiederherstellbarkeit und Verwaltung. Da das Unternehmen auf zukünftiges Wachstum und Ausfallsicherheit setzt, ist Kubernetes die ideale Grundlage für dieses Setup.
+
 ### Anwendungen und Datenbanken
 
 Es werden insgesamt **drei Hauptanwendungen** betrieben:
