@@ -217,6 +217,7 @@ helm repo update
 Quelle: https://github.com/bitnami/charts/tree/main/bitnami/wordpress
 
 ```powershell
+kubectl create namespace wordpress
 helm install wiss-wordpress bitnami/wordpress --set service.type=ClusterIP
 ```
 
@@ -242,7 +243,7 @@ Der Benutzername lautet also `user`. Beim Passwort kommt höchstwahrscheinlich e
 #### 4. Installation prüfen:
 
 ```powershell
-kubectl get pods
+kubectl get pods -n wordpress
 ```
 
 Die Ausgabe zeigt die laufenden Pods. Es kann einige Minuten dauern, bis beide Pods den Status `Running` und `Ready` erreichen. Währenddessen kann der Befehl mehrfach ausgeführt werden. In dem Fall muss die Ausgabe zwei Pods ergeben, die beide mit dem Prefix `wordpress-` beginnen.
@@ -274,8 +275,6 @@ spec:
                 name: wiss-wordpress
                 port:
                   number: 80
-
-
 ```
 
 Anschliessend kannst du die Datei laden via Terminal mit Hilfe von `kubectl` an `ingress` übergeben.
@@ -300,7 +299,7 @@ kubectl create namespace mediawiki
 ```
 
 #### 2. Configdateien erstellen:
-Die nachfolgenden 3 Configdateien habe ich von ChatGPT generieren lassen aber gemäss ChatGPT findet man dieser mehr oder weniger identisch in der Dokumentation von MediaWiki. Danach kommt wieder die Ingress-Konfiguration analog derjenigen von Wordpress weiter oben.
+Die nachfolgenden 4 Configdateien habe ich von ChatGPT generieren lassen aber gemäss ChatGPT findet man dieser mehr oder weniger identisch in der Dokumentation von MediaWiki. Danach kommt wieder die Ingress-Konfiguration analog derjenigen von Wordpress weiter oben.
 
 ##### 1. mariadb-deployment.yaml
 Datei mit dem Namen `mariadb-deployment.yaml` erstellen und unter `C:\kubetools` speichern. Nachfolgend der Inhalt:
@@ -347,10 +346,10 @@ metadata:
   name: mediawiki
   namespace: mediawiki
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: mediawiki
-  replicas: 1
   template:
     metadata:
       labels:
@@ -359,6 +358,8 @@ spec:
       containers:
         - name: mediawiki
           image: mediawiki:1.42.1
+          ports:
+            - containerPort: 80
           env:
             - name: MEDIAWIKI_DB_TYPE
               value: mysql
@@ -370,8 +371,14 @@ spec:
               value: wiki
             - name: MEDIAWIKI_DB_PASSWORD
               value: wikipass
-          ports:
-            - containerPort: 80
+          volumeMounts:
+            - name: mediawiki-data
+              mountPath: /var/www/html/images
+      volumes:
+        - name: mediawiki-data
+          persistentVolumeClaim:
+            claimName: mediawiki-pvc
+
 ```
 
 ##### 3. mediawiki-service.yaml
@@ -406,7 +413,26 @@ spec:
 
 ```
 
-##### 4. mediawiki-ingress.yaml
+##### 4. mediawiki-pvc.yaml
+Datei mit dem Namen `mediawiki-pvc.yaml` erstellen und unter `C:\kubetools` speichern. Nachfolgend der Inhalt:
+
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mediawiki-pvc
+  namespace: mediawiki
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: standard
+
+```
+
+##### 5. mediawiki-ingress.yaml
 Datei mit dem Namen `mediawiki-ingress.yaml` erstellen und unter `C:\kubetools` speichern. Nachfolgend der Inhalt:
 
 ```yaml
@@ -431,6 +457,7 @@ spec:
                 port:
                   number: 80
 ```
+
 #### 3. Installation:
 Die Installation könnte nicht einfacher sein. Einfach ein Terminal öffnen und die nachfolgenden Befehle kopieren. So werden die gerade erstellten Dateien geladen.
 
@@ -438,9 +465,16 @@ Die Installation könnte nicht einfacher sein. Einfach ein Terminal öffnen und 
 kubectl apply -f c:\kubetools\mariadb-deployment.yaml
 kubectl apply -f c:\kubetools\mediawiki-deployment.yaml
 kubectl apply -f c:\kubetools\mediawiki-service.yaml
+kubectl apply -f c:\kubetools\mediawiki-pvc.yaml
 kubectl apply -f c:\kubetools\mediawiki-ingress.yaml
 ```
 
 #### 4. Testen:
 - Im Terminal `kubectl get pods -n mediawiki`
 - Im Browser http://mediawiki.localhost aufrufen
+
+Im Terminal sollte man 2 laufende Pods sehen. Im Browser sollte das Web-Setup kommen. Soweit so gut; das Setup liesse sich auch ausführen aber das möchte man ja nicht jedes Mal machen. Wir müssen also noch Ergänzungen machen, damit das ganze persistent ist.
+
+#### 5. Persistenz
+
+##### 1. PVC erstellen
