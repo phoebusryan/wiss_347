@@ -35,7 +35,36 @@ Die aktuelle Version kann auf der offiziellen Website heruntergeladen werden:
 
 Nach dem Download einfach die Installationsdatei ausführen und den Anweisungen folgen.
 
-### Kubectl installieren
-**Kubectl** muss nicht direkt installiert werden, sondern einfach heruntergeladen und verknüpft werden. Die dafür benötigte Datei `kubectl.exe` findet man unter nachfolgendem Link: https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/
+### Installation von kubectl
 
-Erstelle einen Ordner C:\kubetools und kopiere die heruntergeladene Datei da rein.
+**kubectl** muss nicht installiert, sondern lediglich heruntergeladen und eingebunden werden. Die ausführbare Datei `kubectl.exe` kann unter folgendem Link bezogen werden:  
+[https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/](https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/)
+
+Erstelle einen Ordner namens `C:\kubetools` und speichere die heruntergeladene Datei darin.
+
+### Hinzufügen zur Umgebungsvariablen (Path)
+
+Damit `kubectl` bequem im Terminal aufgerufen werden kann, muss der Pfad zum Ordner `C:\kubetools` in die **Windows-Umgebungsvariablen** aufgenommen werden:
+
+1. Öffne das Startmenü und suche nach **„Umgebungsvariablen für dieses Konto bearbeiten“**.
+2. Im oberen Bereich („Benutzervariablen“) den Eintrag **„Path“** auswählen und auf **„Bearbeiten“** klicken.
+3. Im neuen Fenster auf **„Neu“** klicken, dann auf **„Durchsuchen“** und den Ordner `C:\kubetools` auswählen.
+4. Änderungen mit **OK** bestätigen und den Computer **neu starten**.
+
+Nach dem Neustart ein Terminal (CMD oder PowerShell) öffnen und folgenden Befehl testen:
+
+```powershell
+kubectl version --client
+```
+
+### Installation von Helm
+
+Auch **Helm** muss nicht klassisch installiert werden, sondern wird lediglich heruntergeladen und eingebunden. Die passende Version für Windows (amd64) kann hier heruntergeladen werden:  [https://github.com/helm/helm/releases](https://github.com/helm/helm/releases)
+
+Nach dem Download das ZIP-Archiv entpacken und die Datei `helm.exe` in den Ordner `C:\kubetools` verschieben – wie bereits bei `kubectl`.
+
+Anschliessend ein Terminal (CMD oder PowerShell) öffnen und mit folgendem Befehl prüfen, ob Helm korrekt funktioniert:
+
+```powershell
+helm version
+```
