@@ -3,10 +3,10 @@
 ## Einleitung
 Für das vorliegende Projekt wird eine containerisierte Umgebung auf Basis von Kubernetes aufgebaut, welche die drei Webanwendungen **WordPress**, **MediaWiki** und **Jira** zuverlässig bereitstellt. Ziel ist es, alle Applikationen inklusive Datenbanken mit Persistenz, Monitoring und Zugriff über einen zentralen **Ingress-Reverse-Proxy** in einem lokalen Cluster zu betreiben.
 
-## Beispielszenario
-Ein mittelständisches Unternehmen plant den Aufbau einer internen IT-Umgebung, die verschiedene Anforderungen zentral abdeckt:
+## Fiktives Einsatzzenario
+Die Firma Unvt GmbH plant den Aufbau einer internen IT-Umgebung, die verschiedene Anforderungen zentral abdeckt:
 
-- **WordPress** dient als öffentlich zugängliche **Unternehmenswebsite**, um Dienstleistungen, Neuigkeiten und Karriereseiten zu präsentieren.
+- **WordPress** dient als öffentlich zugänglicher **Blog**, um interne Neuigkeiten zu präsentieren.
 - **MediaWiki** wird intern als **Wissensdatenbank** und **Intranet-Lösung** genutzt, um Dokumentationen, Teamwissen und Prozessbeschreibungen für Mitarbeitende bereitzustellen.
 - **Jira** kommt als zentrales **Projektmanagement- und Ticketsystem** zum Einsatz, um Aufgaben, Bugs und Support-Anfragen strukturiert zu verwalten.
 
@@ -27,7 +27,7 @@ Kubernetes bietet gegenüber klassischen Containerlösungen wie Docker Compose d
 Es werden insgesamt **drei Hauptanwendungen** betrieben:
 
 - **Jira** (Projektmanagement)  
-- **WordPress** (Unternehmenswebsite)  
+- **WordPress** (Blog)  
 - **MediaWiki** (Wissensdatenbank / Intranet)
 
 Jede dieser Anwendungen läuft in einem eigenen **Pod** und kommuniziert über einen internen **ClusterIP-Service** mit einer zugehörigen **Datenbank**, die ebenfalls in einem eigenen Pod betrieben wird:
@@ -55,57 +55,57 @@ Passwörter, Zugangsdaten und Konfigurationswerte werden über **ConfigMaps und 
 
 ## Begriffserklärungen & Merksätze
 
-### 🧱 Pod
+### Pod
 Ein **Pod** ist die kleinste ausführbare Einheit in Kubernetes und enthält in der Regel einen oder mehrere Container, die gemeinsam laufen und Ressourcen wie Netzwerk und Speicher teilen. Jede Anwendung (z. B. WordPress) läuft in einem eigenen Pod.
 
 **Merksatz:** *„Ein Pod ist wie ein Container-Gehäuse für deine App – darin lebt dein Programm.“*
 
-### 🖥️ Node
+### Node
 Ein **Node** ist ein physischer oder virtueller Rechner im Kubernetes-Cluster, auf dem die Pods ausgeführt werden. In unserem Projekt handelt es sich um einen lokalen Node, der durch **Minikube** bereitgestellt wird.
 
 **Merksatz:** *„Nodes sind das Fundament – Pods wohnen drauf.“*
 
-### 🌐 Service
+### Service
 Ein **Service** ist eine Netzwerkschnittstelle in Kubernetes, die eine konstante Verbindung zu einem oder mehreren Pods ermöglicht – auch wenn sich deren IP-Adressen ändern. In diesem Projekt kommen **ClusterIP-Services** zum Einsatz, die innerhalb des Clusters erreichbar sind.
 
 **Merksatz:** *„Pods kommen und gehen, Services bleiben bestehen.“*
 
-### 🚪 Ingress
+### Ingress
 Ein **Ingress** ist eine Ressource in Kubernetes, die regelt, wie externe HTTP-Anfragen an interne Services weitergeleitet werden. Er definiert z. B., dass Anfragen an `/wp` an den WordPress-Service gehen.
 
 **Merksatz:** *„Ingress ist der Türsteher deines Clusters – er sagt, wer rein darf und wohin.“*
 
-### 🕸️ nginx (als Ingress-Controller)
+### nginx (als Ingress-Controller)
 **nginx** ist ein leistungsfähiger Webserver, der in Kubernetes als **Ingress-Controller** eingesetzt wird. Er liest die Ingress-Regeln aus und setzt sie technisch um, indem er als Reverse Proxy fungiert und Anfragen korrekt an die dahinterliegenden Services weiterleitet.
 
 **Merksatz:** *„nginx ist der Postbote mit dem Stadtplan – er weiss, wohin jede Anfrage gehen soll.“*
 
-### 💾 PVC (Persistent Volume Claim)
+### PVC (Persistent Volume Claim)
 Ein **PVC** ist eine Speicheranfrage eines Pods. Ein Pod (z. B. eine Datenbank) beantragt damit Speicherplatz, der dauerhaft bestehen bleibt – auch beim Neustart oder bei Änderungen im Cluster.
 
 **Merksatz:** *„PVC fragt: 'Kann ich bitte Speicher haben?' – PV sagt: 'Hier, nimm mich!'“*
 
-### 💿 PV (Persistent Volume)
+### PV (Persistent Volume)
 Ein **PV** ist der tatsächlich bereitgestellte Speicherplatz im Cluster, der von einem PVC beansprucht werden kann. Er stellt z. B. lokalen Speicher auf dem Minikube-Host bereit und wird vom System oder manuell verwaltet.
 
 **Merksatz:** *„PV = Lagerplatz, PVC = Bestellung.“*
 
-### 🔒 Secret
+### Secret
 Ein **Secret** funktioniert wie eine ConfigMap, ist aber für sensible Daten gedacht – z. B. Passwörter, API-Schlüssel oder Zertifikate. Die Inhalte werden verschlüsselt gespeichert und sicher in Pods eingebunden.
 
 **Merksatz:** *„Was in einem Secret steckt, bleibt geheim – wie das WLAN-Passwort zu Hause.“*
 
-### ⚙️ ConfigMap
+### ConfigMap
 Eine **ConfigMap** speichert Konfigurationsdaten (z. B. Umgebungsvariablen) in Textform und stellt sie Pods zur Verfügung. Damit kann die Konfiguration einer Anwendung geändert werden, ohne den Container selbst neu zu bauen.
 
 **Merksatz:** *„Die ConfigMap sagt deinem Pod, wie er sich verhalten soll – ohne dass du ihn neu baust.“*
 
-### 📈 Prometheus
+### Prometheus
 **Prometheus** ist ein Open-Source-Monitoring-System, das Messwerte wie CPU-Auslastung, Arbeitsspeicher und Netzwerkdaten sammelt und speichert. Es arbeitet auf Basis eines Pull-Prinzips und fragt regelmässig definierte Endpunkte ab.
 
 **Merksatz:** *„Prometheus ist der Spion – er beobachtet alles, was dein System macht.“*
 
-### 📊 Grafana
+### Grafana
 **Grafana** ist eine Plattform zur Visualisierung von Metriken aus verschiedenen Quellen (z. B. Prometheus). Damit lassen sich Dashboards erstellen, um Systemdaten anschaulich darzustellen und zu überwachen.
 
 **Merksatz:** *„Grafana macht schön sichtbar, was Prometheus weiss.“*
@@ -200,25 +200,66 @@ Das sorgt dafür, dass `localhost` korrekt auf den Ingress zeigt. Das Fenster mu
 
 Die erste Anwendung, die im Kubernetes-Cluster installiert wird, ist **WordPress**. Dafür wird das offizielle Helm-Chart von **Bitnami** verwendet, welches neben WordPress auch eine MariaDB-Datenbank und die nötigen Volumes bereitstellt.
 
-### Schritte
+### 1. Wordpress Configdatei anlegen
+Eine neue Datei mit dem Namen `wordpress-values.yaml` anlegen und im Ordner `C:\kubetools` ablegen. Woher kommt diese Datei? Noch dokumentieren!
 
-#### 1. Helm-Repository von Bitnami hinzufügen:
+```powershell
+global:
+  storageClass: standard
+
+wordpressUsername: admin
+wordpressPassword: mein-geheimes-passwort
+wordpressEmail: admin@example.com
+wordpressFirstName: Admin
+wordpressLastName: User
+wordpressBlogName: Mein WordPress
+
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 10Gi
+
+mariadb:
+  enabled: true
+  auth:
+    rootPassword: supergeheim
+  primary:
+    persistence:
+      enabled: true
+      accessMode: ReadWriteOnce
+      size: 10Gi
+
+service:
+  type: ClusterIP
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  hostname: blog.unvt.ch
+  path: /
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  tls: false
+```
+
+### 2. Helm-Repository von Bitnami hinzufügen:
 
 ```powershell
 helm repo add bitnami https://charts.bitnami.com/bitnami
 ```
 
-#### 2. Helm-Repositories aktualisieren:
+### 3. Helm-Repositories aktualisieren:
 ```powershell
 helm repo update
 ```
 
-#### 3. WordPress installieren:
+### 4. WordPress installieren:
 Quelle: https://github.com/bitnami/charts/tree/main/bitnami/wordpress
 
 ```powershell
-kubectl create namespace wordpress
-helm install wiss-wordpress bitnami/wordpress --set service.type=ClusterIP
+kubectl create namespace unvt-wordpress
+helm install unvt-wordpress bitnami/wordpress --namespace unvt-wordpress -f c:\kubetools\wordpress-values.yaml
 ```
 
 Dieser Befehl installiert:
@@ -227,64 +268,44 @@ Dieser Befehl installiert:
 - Zwei Persistent Volume Claims (PVCs) – für WordPress-Daten und Datenbank
 - Interne Services (ClusterIP)
 
-Das `wiss-wordpress` ist das Prefix für die Pods, die erstellt werden. Das ist zur späteren identifizierung sinnvoll und vorallem dann, wenn es mehrere Wordpress-Installationen geben würde.
+Das `unvt-wordpress` ist das Prefix für die Pods, die erstellt werden. Das ist zur späteren identifizierung sinnvoll und vorallem dann, wenn es mehrere Wordpress-Installationen geben würde.
 
-
-Er legt zudem direkt einen Adminbenutzer und zeigt, wie man an die Zugangsdaten des Benutzers kommt:
-```powershell
-echo Username: user
-echo Password: $(kubectl get secret --namespace default wordpress -o jsonpath="{.data.wordpress-username}" | base64 --d)
-```
-Der Benutzername lautet also `user`. Beim Passwort kommt höchstwahrscheinlich ein Fehler, der sagt, dass `base64` nicht installiert ist. Mit einer kurzen Googlerecherche findet man einen alternativen Befehl für Powershell, der funktioniert, da Powershell eine Integration von base64 hat.
-```powershell
-[System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String((kubectl get secret --namespace default wordpress -o jsonpath="{.data.wordpress-password}")))
-```
-
-#### 4. Installation prüfen:
+### 5. Installation prüfen:
 
 ```powershell
-kubectl get pods -n wordpress
+kubectl get pods -n unvt-wordpress
 ```
 
-Die Ausgabe zeigt die laufenden Pods. Es kann einige Minuten dauern, bis beide Pods den Status `Running` und `Ready` erreichen. Währenddessen kann der Befehl mehrfach ausgeführt werden. In dem Fall muss die Ausgabe zwei Pods ergeben, die beide mit dem Prefix `wordpress-` beginnen.
+Die Ausgabe zeigt die laufenden Pods. Es kann einige Minuten dauern, bis beide Pods den Status `Running` und `Ready` erreichen. Währenddessen kann der Befehl mehrfach ausgeführt werden. In dem Fall muss die Ausgabe zwei Pods ergeben, die beide mit dem Prefix `unvt-wordpress-` beginnen.
 
-Mit dem nachfolgenden Befehl kann man temporär einen `Port-Forwarder` erstellen, sodass Wordpress unter `http://localhost:8080` laufen sollte:
+Anschliessend kann man im Browser `http://blog.unvt.ch/` aufrufen und sollte die Wordpress-Seite sehen.
+
+### 6. Prüfen der Persistenz
+
+Am besten einloggen unter `http://blog.unvt.ch/admin` und dann irgendwas verändern oder einen Post erfassen oder so.
+
+Anschliessend die Pods löschen:
+
 ```powershell
-kubectl port-forward svc/wiss-wordpress 8080:80
+kubectl delete pod -n unvt-wordpress -l app.kubernetes.io/name=wordpress
+kubectl delete pod -n unvt-wordpress -l app.kubernetes.io/name=mariadb
 ```
 
-#### 5. Ingress für Wordpress 
-Damit WordPress über den Browser auch via Domain, Url oder Subdirectory aufgerufen werden kann (z. B. unter `http://localhost/wordpress`), wird ein Ingress-Objekt erstellt, das Anfragen korrekt an den WordPress-Service weiterleitet.
-
-Erstelle nun im Ordner `c:\kubetools` eine Datei namens `wordpress-ingress.yaml` mit folgendem Inhalt:
-```yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: wordpress-ingress
-spec:
-  ingressClassName: nginx
-  rules:
-    - host: wordpress.localhost
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: wiss-wordpress
-                port:
-                  number: 80
-```
-
-Anschliessend kannst du die Datei laden via Terminal mit Hilfe von `kubectl` an `ingress` übergeben.
+Jetzt werden die Pods automatisch neu erstellt. Nun muss wieder geprüft werden ob sie laufen:
 ```powershell
-kubectl apply -f c:\kubetools\wordpress-ingress.yaml
+kubectl get pods -n unvt-wordpress
 ```
+Sobald beides Pods wieder `running` und `ready` sind, wieder die URL `http://blog.unvt.ch/` aurufen und schauen ob noch alles da ist.
 
-Nun benötigt man das ganz normale `Notepad` von Windows, welches aber mit **Administrationsrechten** gestartet werden muss. Dann öffnet man die Datei `C:\Windows\System32\drivers\etc\hosts` und fügt dort den Eintrag `127.0.0.1 wordpress.localost` ein und speichert die Datei.
+Man kann sogar Minikube neustarten
+```powershell
+minikube stop
+minikube start
+minikube tunnel
+```
+WIeder warten, bis die Pods wieder da sind und den Blog wieder aufrufen.
 
-Nun sollte man im Browser auf `http://wordpress.localhost` kommen und alles normal nutzen können
+---
 
 ## 4. MediaWiki installieren:
 
