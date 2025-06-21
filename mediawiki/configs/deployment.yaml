@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mediawiki
+  namespace: unvt-mediawiki
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mediawiki
+  template:
+    metadata:
+      labels:
+        app: mediawiki
+    spec:
+      containers:
+        - name: mediawiki
+          image: mediawiki:1.43
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MEDIAWIKI_SITE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: mediawiki-config
+                  key: MEDIAWIKI_SITE_NAME
+            - name: MEDIAWIKI_SITE_LANG
+              valueFrom:
+                configMapKeyRef:
+                  name: mediawiki-config
+                  key: MEDIAWIKI_SITE_LANG
+            - name: MEDIAWIKI_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: mediawiki-config
+                  key: MEDIAWIKI_DB_NAME
+            - name: MEDIAWIKI_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: mediawiki-config
+                  key: MEDIAWIKI_DB_USER
+            - name: MEDIAWIKI_DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: mediawiki-config
+                  key: MEDIAWIKI_DB_HOST
+            - name: MEDIAWIKI_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mediawiki-secret
+                  key: MEDIAWIKI_DB_PASSWORD
+          volumeMounts:
+            - name: mediawiki-persistent-storage
+              mountPath: /bitnami/mediawiki
+      volumes:
+        - name: mediawiki-persistent-storage
+          persistentVolumeClaim:
+            claimName: mediawiki-pvc

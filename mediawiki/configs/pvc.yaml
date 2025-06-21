@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mediawiki-pvc
+  namespace: unvt-mediawiki
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi                          # Speichergrösse (in dem Fall 10 Gibibyte)
+  storageClassName: standard                 # Standard-Storage-Klasse (Minikube kennt "standard")

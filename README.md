@@ -233,6 +233,7 @@ Die Reihenfolge, wie man die Dateien einliest, ist entscheidend!
 ### Kompletten Namespace löschen
 ```powershell
 kubectl delete namespace unvt-wordpress
+kubectl delete namespace unvt-mediawiki
 ``` 
 Das entfernt:
 - Alle Deployments
@@ -244,11 +245,13 @@ Das entfernt:
 ### logs prüfen
 ```powershell
 kubectl logs -l app=wordpress -n unvt-wordpress
+kubectl logs -l app=mediawiki -n unvt-mediawiki
 ``` 
 
 ### laufende Pods prüfen
 ```powershell
 kubectl get pods -n unvt-wordpress
+kubectl get pods -n unvt-mediawiki
 ``` 
 
 ## Quellen

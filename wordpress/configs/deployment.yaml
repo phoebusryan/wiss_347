@@ -46,6 +46,9 @@ spec:
                 secretKeyRef:
                   name: wordpress-secret
                   key: WORDPRESS_DB_PASSWORD
+          volumeMounts:
+            - name: wordpress-persistent-storage
+              mountPath: /bitnami/wordpress
       volumes:
         - name: wordpress-persistent-storage
           persistentVolumeClaim:

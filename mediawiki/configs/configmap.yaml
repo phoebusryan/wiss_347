@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mediawiki-config
+  namespace: unvt-mediawiki
+data:
+  MEDIAWIKI_SITE_NAME: "SchulWiki"
+  MEDIAWIKI_SITE_LANG: "de"
+  MEDIAWIKI_DB_NAME: "mediawiki"
+  MEDIAWIKI_DB_USER: "root"
+  MEDIAWIKI_DB_HOST: "mariadb-service"
