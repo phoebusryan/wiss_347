@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wordpress-ingress
+  namespace: unvt-wordpress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: wordpress.local
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: wordpress-service
+                port:
+                  number: 80

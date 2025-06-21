@@ -54,7 +54,7 @@ Alle Datenbank-Pods sowie Prometheus sind mit **Persistent Volume Claims (PVCs)*
 Passwörter, Zugangsdaten und Konfigurationswerte werden über **ConfigMaps und Secrets** an die jeweiligen Pods übergeben. Dies ermöglicht eine sichere und flexible Verwaltung der Umgebungsparameter innerhalb des Clusters. Auf einen **Loadbalancer** wird explizit verzichtet, da dies in einer lokalen (internen) Umgebung nicht notwendig ist.
 
 ### Erreichbarkeit
-Alle Applikationen werden über einen eigenen Hostname (z.B. blog.local) erreichbar gemacht statt z.B. `localhost/wordpress`. Warum? Viele Webapplikationen haben Probleme, wenn sie in Unterverzeichnissen laufen, was zur Folge hat, dass Assets (CSS, JS, Bilder etc.) oder auch Plugins und Weiterleitungen nicht funktionieren. Mit einzigartigen Hostnames kann man all' diesen Problemen aus dem Weg zu gehen. Der Nachteil daran ist, dass man für jede Applikation einen Eintrag in der `hosts-Datei` von Windows erstellen muss.
+Alle Applikationen werden über einen eigenen Hostname (z.B. wordpress.local) erreichbar gemacht statt z.B. `localhost/wordpress`. Warum? Viele Webapplikationen haben Probleme, wenn sie in Unterverzeichnissen laufen, was zur Folge hat, dass Assets (CSS, JS, Bilder etc.) oder auch Plugins und Weiterleitungen nicht funktionieren. Mit einzigartigen Hostnames kann man all' diesen Problemen aus dem Weg zu gehen. Der Nachteil daran ist, dass man für jede Applikation einen Eintrag in der `hosts-Datei` von Windows erstellen muss.
 
 ## Begriffserklärungen & Merksätze
 
@@ -264,3 +264,4 @@ kubectl get pods -n unvt-mediawiki
 ## Probleme
 - mediawiki ist hoffnungslos veraltet und war sehr mühsam das zu installieren
 - Jira benötigt einen Account für das Setup. Es war also tatsächlich notwendig, sich zu registrieren. Das habe ich sogar gemacht aber dann wurde ich aufgefordert eine Cloud-Lizenz zu buchen, weil es die lokale Version nicht mehr gibt.
+- Mit PortForwarding lief Jira und Wordpress sehr schnell. Ingress hat aber extreme Probleme bereitet.
