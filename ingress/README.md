@@ -54,4 +54,15 @@ Am besten das ganz normale `notepad.exe` mit Administratorrechten öffnen und da
 127.0.0.1 mediawiki.local
 ```
 
+### Ingress starten
+```powershell
 minikube tunnel
+```
+
+### Testen
+Nun sollte man bequem im Browser folgende URLs aufrufen können:
+- http://wordpress.local
+- http://jira.local
+- http://mediawiki.local
+
+Damit das funktioniert, muss `minikube tunnel` die ganze Zeit laufen.
