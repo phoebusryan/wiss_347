@@ -10,7 +10,7 @@ Die Firma Unvt GmbH plant den Aufbau einer internen IT-Umgebung, die verschieden
 - **MediaWiki** wird intern als **Wissensdatenbank** und **Intranet-Lösung** genutzt, um Dokumentationen, Teamwissen und Prozessbeschreibungen für Mitarbeitende bereitzustellen.
 - **Jira** kommt als zentrales **Projektmanagement- und Ticketsystem** zum Einsatz, um Aufgaben, Bugs und Support-Anfragen strukturiert zu verwalten.
 
-Die Firma legt grossen Wert auf **Skalierbarkeit**, **Zuverlässigkeit** und **Zugriffskontrolle**, weshalb die Umgebung containerisiert und mit Kubernetes orchestriert wird. Durch den Einsatz eines zentralen Ingress-Controllers können alle Dienste über eine gemeinsame Adresse und klar definierte Pfade bereitgestellt werden.
+Die Firma legt grossen Wert auf **Skalierbarkeit**, **Zuverlässigkeit** und **Zugriffskontrolle**, weshalb die Umgebung containerisiert und mit Kubernetes orchestriert wird. Durch den Einsatz eines zentralen Ingress-Controllers können alle Dienste über klar definierte Pfade bereitgestellt werden.
 
 ## Infrastrukturübersicht
 
@@ -51,7 +51,11 @@ Alle Datenbank-Pods sowie Prometheus sind mit **Persistent Volume Claims (PVCs)*
 
 ### Konfiguration
 
-Passwörter, Zugangsdaten und Konfigurationswerte werden über **ConfigMaps und Secrets** an die jeweiligen Pods übergeben. Dies ermöglicht eine sichere und flexible Verwaltung der Umgebungsparameter innerhalb des Clusters.
+Passwörter, Zugangsdaten und Konfigurationswerte werden über **ConfigMaps und Secrets** an die jeweiligen Pods übergeben. Dies ermöglicht eine sichere und flexible Verwaltung der Umgebungsparameter innerhalb des Clusters. Auf einen **Loadbalancer** wird explizit verzichtet, da dies in einer lokalen (internen) Umgebung nicht notwendig ist.
+
+### Erreichbarkeit
+Alles Applikationen werden über einen eigenen Hostname oder eine eigene (Sub-) Domain erreichbar gemacht statt z.B. `localhost/wordpress`. Warum? Viele Webapps haben Probleme, wenn sie in Unterverzeichnissen laufen, was zur Folge hat, dass Assets (CSS, JS, Bilder etc.) oder auch Plugins und Weiterleitungen nicht funktionieren. Um all' diesen Problemen aus dem Weg zu gehen, werden wie bereits eigene (Sub-) Domains eingesetzt. Diese Domains müssten entweder in der `hosts-Datei` von Windows angelegt werden (z.B. wordpress.local 127.0.0.1) oder alternativ kann ein externer DNS genutzt werden. In diesem Projekt geht es um die Firma **Unvt GmbH** welche die Domain `unvt.ch` besitzt. In der `DNS-Zone` dieser Domain, wurden drei `A-Records` (wiki.unvt.ch, blog.unvt.ch und jira.unvt.ch) erstellt, die jeweils auf `127.0.0.1` zeigen. Das macht das Erstellen und Testen enorm viel einfacher. Man kann diese drei Domains anpingen und erhält Antwort von `127.0.0.1`, weshalb das wunderbar funktioniert.
+
 
 ## Begriffserklärungen & Merksätze
 
@@ -65,13 +69,18 @@ Ein **Node** ist ein physischer oder virtueller Rechner im Kubernetes-Cluster, a
 
 **Merksatz:** *„Nodes sind das Fundament – Pods wohnen drauf.“*
 
+### Replicas
+**Replicas** geben in einem Kubernetes Deployment an, wie viele identische Instanzen (Pods) einer Anwendung gleichzeitig laufen sollen.
+
+**Merksatz** *„Mehr Replikas = mehr Ausfallsicherheit und Lastverteilung – weniger Replikas = weniger Ressourcenverbrauch."*
+
 ### Service
 Ein **Service** ist eine Netzwerkschnittstelle in Kubernetes, die eine konstante Verbindung zu einem oder mehreren Pods ermöglicht – auch wenn sich deren IP-Adressen ändern. In diesem Projekt kommen **ClusterIP-Services** zum Einsatz, die innerhalb des Clusters erreichbar sind.
 
 **Merksatz:** *„Pods kommen und gehen, Services bleiben bestehen.“*
 
 ### Ingress
-Ein **Ingress** ist eine Ressource in Kubernetes, die regelt, wie externe HTTP-Anfragen an interne Services weitergeleitet werden. Er definiert z. B., dass Anfragen an `/wp` an den WordPress-Service gehen.
+Ein **Ingress** ist eine Ressource in Kubernetes, die regelt, wie externe HTTP-Anfragen an interne Services weitergeleitet werden. Er definiert z. B., dass Anfragen an `wordpress.localhost` an den WordPress-Service gehen.
 
 **Merksatz:** *„Ingress ist der Türsteher deines Clusters – er sagt, wer rein darf und wohin.“*
 
@@ -90,15 +99,15 @@ Ein **PV** ist der tatsächlich bereitgestellte Speicherplatz im Cluster, der vo
 
 **Merksatz:** *„PV = Lagerplatz, PVC = Bestellung.“*
 
-### Secret
-Ein **Secret** funktioniert wie eine ConfigMap, ist aber für sensible Daten gedacht – z. B. Passwörter, API-Schlüssel oder Zertifikate. Die Inhalte werden verschlüsselt gespeichert und sicher in Pods eingebunden.
-
-**Merksatz:** *„Was in einem Secret steckt, bleibt geheim – wie das WLAN-Passwort zu Hause.“*
-
 ### ConfigMap
 Eine **ConfigMap** speichert Konfigurationsdaten (z. B. Umgebungsvariablen) in Textform und stellt sie Pods zur Verfügung. Damit kann die Konfiguration einer Anwendung geändert werden, ohne den Container selbst neu zu bauen.
 
 **Merksatz:** *„Die ConfigMap sagt deinem Pod, wie er sich verhalten soll – ohne dass du ihn neu baust.“*
+
+### Secret
+Ein **Secret** funktioniert wie eine ConfigMap, ist aber für sensible Daten gedacht – z. B. Passwörter, API-Schlüssel oder Zertifikate. Die Inhalte werden verschlüsselt gespeichert und sicher in Pods eingebunden.
+
+**Merksatz:** *„Was in einem Secret steckt, bleibt geheim – wie das WLAN-Passwort zu Hause.“*
 
 ### Prometheus
 **Prometheus** ist ein Open-Source-Monitoring-System, das Messwerte wie CPU-Auslastung, Arbeitsspeicher und Netzwerkdaten sammelt und speichert. Es arbeitet auf Basis eines Pull-Prinzips und fragt regelmässig definierte Endpunkte ab.
@@ -117,7 +126,12 @@ Eine **ConfigMap** speichert Konfigurationsdaten (z. B. Umgebungsvariablen) in
 - **Minikube** ist ein Tool, mit dem man einen lokalen Kubernetes-Cluster auf dem eigenen Rechner starten und testen kann.
 - **Docker** ist eine Plattform, mit der Anwendungen in isolierten Containern verpackt, verteilt und ausgeführt werden können.
 - **kubectl** ist das Kommandozeilenwerkzeug, mit dem man Kubernetes-Cluster verwaltet und Befehle an den Cluster senden kann.
-- **Helm** ist ein Paketmanager für Kubernetes, mit dem Anwendungen samt ihrer Konfiguration einfach installiert und verwaltet werden können.
+
+Am naheliegensten wäre hier ausserdem gewesen, auf **Helm** zu setzen. Was genau ist **Helm** und warum wurde darauf verzichtet?
+**Helm** ist ein Paketmanager für Kubernetes, mit dem Anwendungen samt ihrer Konfiguration einfach installiert und verwaltet werden können. Ich habe das auch getestet und konnte mit sehr wenigen Befehlen Wordpress installieren. Trotzdem habe ich am Ende darauf verzichtet aus mehreren Gründen:
+- Helm-Deployments funktionieren nur mit Umwegen mit Configmaps/Secrets. Man muss erst die Installation normal durchführen mit Dummydaten und kann es danach patchen. Das fand ich recht umständlich und hacky aber bin erstmal diesen Weg gegangen.
+- Als ich danach `MediaWiki` installieren wollte, habe ich gesehen, dass sämtliche sogenannte `Charts` (Installationspakete) von `MediaWiki` deprecated waren und ich deshalb ein manuelles Deployment vornehmen musste. Hier habe ich dann entschieden, auch Wordpress **manuell** zu deployen, damit alles einheitlich ist.
+- Der Lerneffekt mit eigenen `yaml-Files` ist definitiv grösser und man hat zu 100% die Kontroller, was eigentlich deployed wird.
 
 ## Aufsetzen der Basis-Infrastruktur
 
@@ -195,303 +209,3 @@ Anschliessend muss ingress noch gestartet werden:
 minikube tunnel
 ```
 Das sorgt dafür, dass `localhost` korrekt auf den Ingress zeigt. Das Fenster muss offen bleiben, solange du testest.
-
-## WordPress mit Helm installieren
-
-Die erste Anwendung, die im Kubernetes-Cluster installiert wird, ist **WordPress**. Dafür wird das offizielle Helm-Chart von **Bitnami** verwendet, welches neben WordPress auch eine MariaDB-Datenbank und die nötigen Volumes bereitstellt.
-
-### 1. Wordpress Configdatei anlegen
-Eine neue Datei mit dem Namen `wordpress-values.yaml` anlegen und im Ordner `C:\kubetools` ablegen. Woher kommt diese Datei? Noch dokumentieren!
-
-```powershell
-global:
-  storageClass: standard
-
-wordpressUsername: admin
-wordpressPassword: mein-geheimes-passwort
-wordpressEmail: admin@example.com
-wordpressFirstName: Admin
-wordpressLastName: User
-wordpressBlogName: Mein WordPress
-
-persistence:
-  enabled: true
-  accessMode: ReadWriteOnce
-  size: 10Gi
-
-mariadb:
-  enabled: true
-  auth:
-    rootPassword: supergeheim
-  primary:
-    persistence:
-      enabled: true
-      accessMode: ReadWriteOnce
-      size: 10Gi
-
-service:
-  type: ClusterIP
-
-ingress:
-  enabled: true
-  ingressClassName: nginx
-  hostname: blog.unvt.ch
-  path: /
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
-  tls: false
-```
-
-### 2. Helm-Repository von Bitnami hinzufügen:
-
-```powershell
-helm repo add bitnami https://charts.bitnami.com/bitnami
-```
-
-### 3. Helm-Repositories aktualisieren:
-```powershell
-helm repo update
-```
-
-### 4. WordPress installieren:
-Quelle: https://github.com/bitnami/charts/tree/main/bitnami/wordpress
-
-```powershell
-kubectl create namespace unvt-wordpress
-helm install unvt-wordpress bitnami/wordpress --namespace unvt-wordpress -f c:\kubetools\wordpress-values.yaml
-```
-
-Dieser Befehl installiert:
-- WordPress-Pod
-- MariaDB-Pod
-- Zwei Persistent Volume Claims (PVCs) – für WordPress-Daten und Datenbank
-- Interne Services (ClusterIP)
-
-Das `unvt-wordpress` ist das Prefix für die Pods, die erstellt werden. Das ist zur späteren identifizierung sinnvoll und vorallem dann, wenn es mehrere Wordpress-Installationen geben würde.
-
-### 5. Installation prüfen:
-
-```powershell
-kubectl get pods -n unvt-wordpress
-```
-
-Die Ausgabe zeigt die laufenden Pods. Es kann einige Minuten dauern, bis beide Pods den Status `Running` und `Ready` erreichen. Währenddessen kann der Befehl mehrfach ausgeführt werden. In dem Fall muss die Ausgabe zwei Pods ergeben, die beide mit dem Prefix `unvt-wordpress-` beginnen.
-
-Anschliessend kann man im Browser `http://blog.unvt.ch/` aufrufen und sollte die Wordpress-Seite sehen.
-
-### 6. Prüfen der Persistenz
-
-Am besten einloggen unter `http://blog.unvt.ch/admin` und dann irgendwas verändern oder einen Post erfassen oder so.
-
-Anschliessend die Pods löschen:
-
-```powershell
-kubectl delete pod -n unvt-wordpress -l app.kubernetes.io/name=wordpress
-kubectl delete pod -n unvt-wordpress -l app.kubernetes.io/name=mariadb
-```
-
-Jetzt werden die Pods automatisch neu erstellt. Nun muss wieder geprüft werden ob sie laufen:
-```powershell
-kubectl get pods -n unvt-wordpress
-```
-Sobald beides Pods wieder `running` und `ready` sind, wieder die URL `http://blog.unvt.ch/` aurufen und schauen ob noch alles da ist.
-
-Man kann sogar Minikube neustarten
-```powershell
-minikube stop
-minikube start
-minikube tunnel
-```
-WIeder warten, bis die Pods wieder da sind und den Blog wieder aufrufen.
-
----
-
-## 4. MediaWiki installieren:
-
-Die zweite Anwendung, die im Kubernetes-Cluster bereitgestellt wird, ist MediaWiki. Ursprünglich hatte ich geplant, die Installation über ein Helm-Chart durchzuführen. Allerdings sind die verfügbaren Charts grösstenteils veraltet und als **"**deprecated**"** gekennzeichnet. Aufgrund der offiziellen Empfehlung, von deren Nutzung abzusehen, habe ich mich entschieden, MediaWiki manuell zu deployen. Selbst wenn ein veraltetes Chart technisch noch funktionieren würde, wären damit sicherheitsrelevante Risiken verbunden.
-
-### Schritte
-
-#### 1. Eigenen Namespace erstellen:
-
-```powershell
-kubectl create namespace mediawiki
-```
-
-#### 2. Configdateien erstellen:
-Die nachfolgenden 4 Configdateien habe ich von ChatGPT generieren lassen aber gemäss ChatGPT findet man dieser mehr oder weniger identisch in der Dokumentation von MediaWiki. Danach kommt wieder die Ingress-Konfiguration analog derjenigen von Wordpress weiter oben.
-
-##### 1. mariadb-deployment.yaml
-Datei mit dem Namen `mariadb-deployment.yaml` erstellen und unter `C:\kubetools` speichern. Nachfolgend der Inhalt:
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: mariadb
-  namespace: mediawiki
-spec:
-  selector:
-    matchLabels:
-      app: mariadb
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: mariadb
-    spec:
-      containers:
-        - name: mariadb
-          image: mariadb:10.11
-          env:
-            - name: MARIADB_ROOT_PASSWORD
-              value: wikisecret
-            - name: MARIADB_DATABASE
-              value: wikidb
-            - name: MARIADB_USER
-              value: wiki
-            - name: MARIADB_PASSWORD
-              value: wikipass
-          ports:
-            - containerPort: 3306
-```
-
-##### 2. mediawiki-deployment.yaml
-Datei mit dem Namen `mediawiki-deployment.yaml` erstellen und unter `C:\kubetools` speichern. Nachfolgend der Inhalt:
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: mediawiki
-  namespace: mediawiki
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: mediawiki
-  template:
-    metadata:
-      labels:
-        app: mediawiki
-    spec:
-      containers:
-        - name: mediawiki
-          image: mediawiki:1.42.1
-          ports:
-            - containerPort: 80
-          env:
-            - name: MEDIAWIKI_DB_TYPE
-              value: mysql
-            - name: MEDIAWIKI_DB_HOST
-              value: mariadb
-            - name: MEDIAWIKI_DB_NAME
-              value: wikidb
-            - name: MEDIAWIKI_DB_USER
-              value: wiki
-            - name: MEDIAWIKI_DB_PASSWORD
-              value: wikipass
-          volumeMounts:
-            - name: mediawiki-data
-              mountPath: /var/www/html/images
-      volumes:
-        - name: mediawiki-data
-          persistentVolumeClaim:
-            claimName: mediawiki-pvc
-
-```
-
-##### 3. mediawiki-service.yaml
-Datei mit dem Namen `mediawiki-service.yaml` erstellen und unter `C:\kubetools` speichern. Nachfolgend der Inhalt:
-
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: mediawiki
-  namespace: mediawiki
-spec:
-  selector:
-    app: mediawiki
-  ports:
-    - port: 80
-      targetPort: 80
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: mariadb
-  namespace: mediawiki
-spec:
-  selector:
-    app: mariadb
-  ports:
-    - port: 3306
-      targetPort: 3306
-  type: ClusterIP
-
-```
-
-##### 4. mediawiki-pvc.yaml
-Datei mit dem Namen `mediawiki-pvc.yaml` erstellen und unter `C:\kubetools` speichern. Nachfolgend der Inhalt:
-
-```yaml
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mediawiki-pvc
-  namespace: mediawiki
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  storageClassName: standard
-
-```
-
-##### 5. mediawiki-ingress.yaml
-Datei mit dem Namen `mediawiki-ingress.yaml` erstellen und unter `C:\kubetools` speichern. Nachfolgend der Inhalt:
-
-```yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: mediawiki-ingress
-  namespace: mediawiki
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-spec:
-  ingressClassName: nginx
-  rules:
-    - host: mediawiki.localhost
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: mediawiki
-                port:
-                  number: 80
-```
-
-#### 3. Installation:
-Die Installation könnte nicht einfacher sein. Einfach ein Terminal öffnen und die nachfolgenden Befehle kopieren. So werden die gerade erstellten Dateien geladen.
-
-```powershell
-kubectl apply -f c:\kubetools\mariadb-deployment.yaml
-kubectl apply -f c:\kubetools\mediawiki-deployment.yaml
-kubectl apply -f c:\kubetools\mediawiki-service.yaml
-kubectl apply -f c:\kubetools\mediawiki-pvc.yaml
-kubectl apply -f c:\kubetools\mediawiki-ingress.yaml
-```
-
-#### 4. Testen:
-- Im Terminal `kubectl get pods -n mediawiki`
-- Im Browser http://mediawiki.localhost aufrufen
-
-Im Terminal sollte man 2 laufende Pods sehen. Im Browser sollte das Web-Setup kommen. Soweit so gut; das Setup liesse sich auch ausführen aber das möchte man ja nicht jedes Mal machen. Wir müssen also noch Ergänzungen machen, damit das ganze persistent ist.
