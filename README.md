@@ -170,18 +170,6 @@ Nach dem Neustart ein Terminal (CMD oder PowerShell) öffnen und folgenden Befeh
 kubectl version --client
 ```
 
-### Installation von Helm
-
-Auch **Helm** muss nicht klassisch installiert werden, sondern wird lediglich heruntergeladen und eingebunden. Die passende Version für Windows (amd64) kann hier heruntergeladen werden:  [https://github.com/helm/helm/releases](https://github.com/helm/helm/releases)
-
-Nach dem Download das ZIP-Archiv entpacken und die Datei `helm.exe` in den Ordner `C:\kubetools` verschieben – wie bereits bei `kubectl`.
-
-Anschliessend ein Terminal (CMD oder PowerShell) öffnen und mit folgendem Befehl prüfen, ob Helm korrekt funktioniert:
-
-```powershell
-helm version
-```
-
 ### Kubernetes-Cluster starten
 
 Zum Abschluss muss der lokale **Kubernetes-Cluster** über Minikube gestartet werden. Dies geschieht mit folgendem Befehl:
