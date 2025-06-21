@@ -54,8 +54,7 @@ Alle Datenbank-Pods sowie Prometheus sind mit **Persistent Volume Claims (PVCs)*
 Passwörter, Zugangsdaten und Konfigurationswerte werden über **ConfigMaps und Secrets** an die jeweiligen Pods übergeben. Dies ermöglicht eine sichere und flexible Verwaltung der Umgebungsparameter innerhalb des Clusters. Auf einen **Loadbalancer** wird explizit verzichtet, da dies in einer lokalen (internen) Umgebung nicht notwendig ist.
 
 ### Erreichbarkeit
-Alles Applikationen werden über einen eigenen Hostname oder eine eigene (Sub-) Domain erreichbar gemacht statt z.B. `localhost/wordpress`. Warum? Viele Webapps haben Probleme, wenn sie in Unterverzeichnissen laufen, was zur Folge hat, dass Assets (CSS, JS, Bilder etc.) oder auch Plugins und Weiterleitungen nicht funktionieren. Um all' diesen Problemen aus dem Weg zu gehen, werden wie bereits eigene (Sub-) Domains eingesetzt. Diese Domains müssten entweder in der `hosts-Datei` von Windows angelegt werden (z.B. wordpress.local 127.0.0.1) oder alternativ kann ein externer DNS genutzt werden. In diesem Projekt geht es um die Firma **Unvt GmbH** welche die Domain `unvt.ch` besitzt. In der `DNS-Zone` dieser Domain, wurden drei `A-Records` (wiki.unvt.ch, blog.unvt.ch und jira.unvt.ch) erstellt, die jeweils auf `127.0.0.1` zeigen. Das macht das Erstellen und Testen enorm viel einfacher. Man kann diese drei Domains anpingen und erhält Antwort von `127.0.0.1`, weshalb das wunderbar funktioniert.
-
+Alle Applikationen werden über einen eigenen Hostname (z.B. blog.local) erreichbar gemacht statt z.B. `localhost/wordpress`. Warum? Viele Webapplikationen haben Probleme, wenn sie in Unterverzeichnissen laufen, was zur Folge hat, dass Assets (CSS, JS, Bilder etc.) oder auch Plugins und Weiterleitungen nicht funktionieren. Mit einzigartigen Hostnames kann man all' diesen Problemen aus dem Weg zu gehen. Der Nachteil daran ist, dass man für jede Applikation einen Eintrag in der `hosts-Datei` von Windows erstellen muss.
 
 ## Begriffserklärungen & Merksätze
 
@@ -156,7 +155,7 @@ Nach dem Download einfach die Installationsdatei ausführen und den Anweisungen 
 
 Erstelle einen Ordner namens `C:\kubetools` und speichere die heruntergeladene Datei darin.
 
-### Hinzufügen zur Umgebungsvariablen (Path)
+#### [Optional] Hinzufügen zur Umgebungsvariablen (Path)
 
 Damit `kubectl` bequem im Terminal aufgerufen werden kann, muss der Pfad zum Ordner `C:\kubetools` in die **Windows-Umgebungsvariablen** aufgenommen werden:
 
@@ -176,9 +175,9 @@ kubectl version --client
 Zum Abschluss muss der lokale **Kubernetes-Cluster** über Minikube gestartet werden. Dies geschieht mit folgendem Befehl:
 
 ```powershell
-minikube start --driver=docker
+minikube start --driver docker --static-ip 192.168.200.200
 ```
-Beim ersten Start kann der Vorgang etwa 5–10 Minuten dauern, da notwendige Komponenten und Images heruntergeladen werden.
+Der Befehl erstellt ein neues Kubernetes-Cluster mit Docker (driver=docker) und gibt ihm eine statische IP-Adresse (192.168.200.200), was für Routing später sinnvoll ist. Beim ersten Start kann der Vorgang etwa 5–10 Minuten dauern, da notwendige Komponenten und Images heruntergeladen werden.
 
 Sollte eine Fehlermeldung erscheinen, liegt das in den meisten Fällen daran, dass Docker nicht läuft – in diesem Fall Docker Desktop zuerst starten und es erneut versuchen.
 
@@ -188,20 +187,9 @@ kubectl get nodes
 ```
 Wenn ein Node mit dem Status Ready angezeigt wird, ist die Basisinstallation abgeschlossen und der Kubernetes-Cluster läuft einsatzbereit.
 
-### Ingress (Reverse proxy) installieren
-Das ist ganz simpel mit einem einzigen Terminal-Befehl:
-```powershell
-minikube addons enable ingress
-```
-Anschliessend muss ingress noch gestartet werden:
-```powershell
-minikube tunnel
-```
-Das sorgt dafür, dass `localhost` korrekt auf den Ingress zeigt. Das Fenster muss offen bleiben, solange du testest.
+### Manuelles deployment
 
-## Manuelles deployment
-
-Wie oben bereits erklärt, setzen wir bei allen Applikationen auf manuelles Deployment, für maximale Sauberkeit und Flexibilität. Damit eine Applikation deployed werden kann, benötigen wir mehrere `yaml-Files`. Nachfolgend dazu eine Tabelle. Der Dateiname kann natürlich beliebig gewählt werden aber es gibt gängige Standards und an diese halten wir uns in dem Projekt.
+Wie oben bereits erklärt, setzen wir bei allen Applikationen auf manuelles Deployment, für maximale Sauberkeit und Flexibilität. Damit eine Applikation deployed werden kann, benötigen wir mehrere `yaml-Files`. Nachfolgend eine Tabelle, die man praktisch immer braucht. Der Dateiname kann natürlich beliebig gewählt werden aber es gibt gängige Standards und an diese halten wir uns in dem Projekt.
 
 | Ressource             | Dateiname       | Zweck                            |
 | --------------------- | ----------------| -------------------------------- |
@@ -210,7 +198,15 @@ Wie oben bereits erklärt, setzen wir bei allen Applikationen auf manuelles Depl
 | PersistentVolumeClaim | pvc.yaml        | Speicher für Daten               |
 | Deployment            | deployment.yaml | Startet die App                  |
 | Service               | service.yaml    | Macht sie im Cluster erreichbar  |
-| Ingress               | ingress.yaml    | Macht sie von aussen erreichbar  |
+
+Oft werden noch weitere Dateien für z.B. eine Datenbank oder PV benötigt. 
+Schlussendlich muss man einfach einen neuen Namespace erstellen und dann alle Dateien einlesen.
+Die Reihenfolge, wie man die Dateien einliest, ist entscheidend!
+
+1. Konfiguration
+2. Speicher
+3. Services
+4. Deployments
 
 ## Installation von Wordpress
 
@@ -224,7 +220,33 @@ Wie oben bereits erklärt, setzen wir bei allen Applikationen auf manuelles Depl
 
 [Hier klicken](jira/README.md)
 
-## Starten 
+## Hilfreiche Tipps und Befehle
+### Umgebung starten 
 1. Docker starten
-2. Im Terminal folgendes eingeben: `minikube start --driver=docker`
+2. Im Terminal folgendes eingeben: `minikube start`
 3. Im Terminal folgendes eingeben: `minikube tunnel`
+
+### Kompletten Namespace löschen
+```powershell
+kubectl delete namespace unvt-wordpress
+``` 
+Das entfernt:
+- Alle Deployments
+- Alle Services
+- Alle PVCs
+- Alle Secrets / ConfigMaps
+- Den Namespace selbst
+
+### logs prüfen
+```powershell
+kubectl logs -l app=wordpress -n unvt-wordpress
+``` 
+
+### laufende Pods prüfen
+```powershell
+kubectl get pods -n unvt-wordpress
+``` 
+
+## Quellen
+- https://minikube.sigs.k8s.io/docs/tutorials/static_ip/
+- https://kubernetes.io/docs/tutorials/stateful-application/mysql-wordpress-persistent-volume/

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service                                # Erzeugt interne Netzwerkschnittstelle
+metadata:
+  name: wordpress-service
+  namespace: unvt-wordpress
+spec:
+  type: ClusterIP                            # Interner Service (kein externer Zugriff)
+  selector:
+    app: wordpress                           # Sucht Pods mit diesem Label
+  ports:
+  - port: 80                                 # Service-Port im Cluster
+    targetPort: 8080                         # Weiterleitung an Container-Port

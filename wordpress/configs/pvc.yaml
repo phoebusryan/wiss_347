@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim                  # Fordert Speicherplatz beim Cluster an
+metadata:
+  name: wordpress-pvc
+  namespace: unvt-wordpress
+spec:
+  accessModes:
+    - ReadWriteOnce                          # Nur ein Node darf gleichzeitig schreiben
+  resources:
+    requests:
+      storage: 10Gi                          # Speichergrösse (in dem Fall 10 Gibibyte)
+  storageClassName: standard                 # Standard-Storage-Klasse (Minikube kennt "standard")
