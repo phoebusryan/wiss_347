@@ -10,7 +10,7 @@ Wie im Hauptkapitel erwähnt, benötigen wir für das manuelle Deployment mindes
 | Deployment            | deployment.yaml         | Startet die App                  |
 | Service               | service.yaml            | Macht sie im Cluster erreichbar  |
 
-Wordpress benötigt jedoch noch drei weitere, weil es eine `MariaDB` benötigt:
+Wordpress benötigt jedoch noch ein paar weitere Dateien, weil es eine `MariaDB` benötigt:
 
 | Ressource             | Dateiname               | Zweck                            |
 | --------------------- | ----------------------- | -------------------------------- |
@@ -18,7 +18,7 @@ Wordpress benötigt jedoch noch drei weitere, weil es eine `MariaDB` benötigt:
 | mariadb-service       | mariadb-service.yaml    | Macht sie im Cluster erreichbar  |
 | mariadb-pvc.yaml      | mariadb-pvc.yaml        | Speicher für Daten               |
 
-Gemäss der vorgegebenen Reihenfolge muss es also so ausshene:
+Gemäss der vorgegebenen Reihenfolge muss es also so aussehen:
 
 ```powershell
 kubectl create namespace unvt-wordpress
