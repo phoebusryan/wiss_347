@@ -60,3 +60,5 @@ Nun müssen wir warten bis die Pods wieder da sind:
 ```powershell
 kubectl get pods -n unvt-wordpress
 ```
+
+Dann im Browser wieder aufrufen und es dürfte sich nichts verändert haben.
