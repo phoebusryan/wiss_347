@@ -260,3 +260,7 @@ kubectl get pods -n unvt-mediawiki
 ## Quellen
 - https://minikube.sigs.k8s.io/docs/tutorials/static_ip/
 - https://kubernetes.io/docs/tutorials/stateful-application/mysql-wordpress-persistent-volume/
+
+## Probleme
+- mediawiki ist hoffnungslos veraltet und war sehr mühsam das zu installieren
+- Jira benötigt einen Account für das Setup. Es war also tatsächlich notwendig, sich zu registrieren. Das habe ich sogar gemacht aber dann wurde ich aufgefordert eine Cloud-Lizenz zu buchen, weil es die lokale Version nicht mehr gibt.
