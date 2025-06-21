@@ -16,7 +16,7 @@ Das ist ganz simpel machbar via Helm:
 ```powershell
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
-create namespace ingress-nginx
+kubectl create namespace ingress-nginx
 helm install ingress-nginx ingress-nginx/ingress-nginx --namespace ingress-nginx
 ```
 Wenn man Ingress installiert, erhält man ein Beispiel-Yaml für die Nutzung und genau auf das setzen wir später.
@@ -44,20 +44,14 @@ kubectl apply -f configs/jira-ingress.yaml
 kubectl apply -f configs/mediawiki-ingress.yaml
 ```
 
-### IP Adresse des lokalen Clusters rausfinden:
-```powershell
-minikube ip
-```
-Das ergibt sowas wie `192.168.49.2`
-
 ### Hosts-Datei anpassen
 
 Am besten das ganz normale `notepad.exe` mit Administratorrechten öffnen und dann folgende Datei öffnen:
 `C:\Windows\System32\drivers\etc\hosts` und folgenden Inhalt ganz unten einfügen:
 ```powershell
-192.168.49.2 wordpress.local
-192.168.49.2 jira.local
-192.168.49.2 mediawiki.local
+127.0.0.1 wordpress.local
+127.0.0.1 jira.local
+127.0.0.1 mediawiki.local
 ```
 
 minikube tunnel
