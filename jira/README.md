@@ -49,3 +49,21 @@ Die Ausgabe zeigt die laufenden Pods. Es kann einige Minuten dauern, bis beide P
 ```powershell
 minikube service jira-service -n unvt-jira
 ```
+
+Das sollte den Browser öffnen und direkt das Jira-Setup zeigen.
+
+## Installation prüfen Teil 3:
+Im Browser ging ein Fenster auf mit einer URL. Vermutlich etwas wie `http://127.0.0.1:54087/`. Das Problem ist, dass man sich hier registrieren muss (habe ich sogar gemacht: `atlassian@unvt.ch` und `qjN8wS9O£3!z`) aber dann hiess es, dass es keine lokale Versionen mehr gibt und man ein Cloud-Abo buchen muss. Unabhängig davon, dass ich das jetzt nicht mache, kann man die Persistenz nicht wirklich testen wenn es keine lokale Version mehr gibt. Grundsätzlich müsste sie aber funktionieren.
+
+Nun kann man die pods löschen:
+```powershell
+kubectl delete pod -l app=jira -n unvt-jira
+kubectl delete pod -l app=postgres -n unvt-jira
+```
+
+Nun müssen wir warten bis die Pods wieder da sind:
+```powershell
+kubectl get pods -n unvt-jira
+```
+
+Dann im Browser wieder aufrufen und es dürfte sich nichts verändert haben.
