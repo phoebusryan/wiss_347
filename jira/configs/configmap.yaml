@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jira-config
+  namespace: unvt-jira
+data:
+  JIRA_DB_NAME: jiradb
+  JIRA_DB_USER: jira
+  JIRA_DB_HOST: postgres-service

@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jira
+  namespace: unvt-jira
+  labels:
+    app: jira
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jira
+  template:
+    metadata:
+      labels:
+        app: jira
+    spec:
+      containers:
+        - name: jira
+          image: atlassian/jira-software:9.15.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ATL_JDBC_URL
+              value: jdbc:postgresql://postgres-service:5432/jiradb
+            - name: ATL_JDBC_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: jira-config
+                  key: JIRA_DB_USER
+            - name: ATL_JDBC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: jira-secret
+                  key: JIRA_DB_PASSWORD
+          volumeMounts:
+            - name: jira-persistent-storage
+              mountPath: /var/atlassian/application-data/jira
+      volumes:
+        - name: jira-persistent-storage
+          persistentVolumeClaim:
+            claimName: jira-pvc

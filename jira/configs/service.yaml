@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service                                # Erzeugt interne Netzwerkschnittstelle 
+metadata:
+  name: jira-service
+  namespace: unvt-jira
+spec:
+  type: ClusterIP                            # Interner Service (kein externer Zugriff)
+  selector:
+    app: jira                                # Sucht Pods mit diesem Label
+  ports:
+  - port: 80                                 # Service-Port im Cluster
+    targetPort: 8080                         # Weiterleitung an Container-Port
