@@ -132,6 +132,7 @@ Am naheliegensten wäre hier ausserdem gewesen, auf **Helm** zu setzen. Was gena
 - Helm-Deployments funktionieren nur mit Umwegen mit Configmaps/Secrets. Man muss erst die Installation normal durchführen mit Dummydaten und kann es danach patchen. Das fand ich recht umständlich und hacky aber bin erstmal diesen Weg gegangen.
 - Als ich danach `MediaWiki` installieren wollte, habe ich gesehen, dass sämtliche sogenannte `Charts` (Installationspakete) von `MediaWiki` deprecated waren und ich deshalb ein manuelles Deployment vornehmen musste. Hier habe ich dann entschieden, auch Wordpress **manuell** zu deployen, damit alles einheitlich ist.
 - Der Lerneffekt mit eigenen `yaml-Files` ist definitiv grösser und man hat zu 100% die Kontroller, was eigentlich deployed wird.
+- Wiederverwendbare Templates (yaml-Files), sodass alle Applikationen gleich installiert werden, was das Ganze nachvollziehbarer und wartbarer macht. 
 
 ## Aufsetzen der Basis-Infrastruktur
 
@@ -222,3 +223,8 @@ Wie oben bereits erklärt, setzen wir bei allen Applikationen auf manuelles Depl
 ## Installation von Jira
 
 [Hier klicken](jira/README.md)
+
+## Starten 
+1. Docker starten
+2. Im Terminal folgendes eingeben: `minikube start --driver=docker`
+3. Im Terminal folgendes eingeben: `minikube tunnel`
