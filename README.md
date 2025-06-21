@@ -175,9 +175,9 @@ kubectl version --client
 Zum Abschluss muss der lokale **Kubernetes-Cluster** über Minikube gestartet werden. Dies geschieht mit folgendem Befehl:
 
 ```powershell
-minikube start --driver docker --static-ip 192.168.200.200
+minikube start
 ```
-Der Befehl erstellt ein neues Kubernetes-Cluster mit Docker (driver=docker) und gibt ihm eine statische IP-Adresse (192.168.200.200), was für Routing später sinnvoll ist. Beim ersten Start kann der Vorgang etwa 5–10 Minuten dauern, da notwendige Komponenten und Images heruntergeladen werden.
+Der Befehl erstellt ein neues Kubernetes-Cluster. Beim ersten Start kann der Vorgang etwa 5–10 Minuten dauern, da notwendige Komponenten und Images heruntergeladen werden.
 
 Sollte eine Fehlermeldung erscheinen, liegt das in den meisten Fällen daran, dass Docker nicht läuft – in diesem Fall Docker Desktop zuerst starten und es erneut versuchen.
 
