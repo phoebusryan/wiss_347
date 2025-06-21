@@ -26,6 +26,11 @@ Wenn man Ingress installiert, erhält man ein Beispiel-Yaml für die Nutzung und
 kubectl get pods -n ingress-nginx
 ```
 
+Nun konfigurieren wir ingress selbst
+```powershell
+kubectl apply -f configs/ingress-class.yaml
+```
+
 Nun wird für jede Applikation (Wordpress, Jira, Mediawiki) eine eigene yaml-Datei angelegt. Der Inhalt ist derjenige aus dem Setupscript gerade eben. Schlussendlich passen wir in der Datei genau **vier** Werte an. Beispiel für Wordpress. Die anderen beiden analog anpassen.
 - metadata.name: wordpress-ingress
 - metadata.namespace: unvt-wordpress
