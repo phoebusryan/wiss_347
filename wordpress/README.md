@@ -60,10 +60,3 @@ Nun müssen wir warten bis die Pods wieder da sind:
 ```powershell
 kubectl get pods -n unvt-wordpress
 ```
-
-## Hosts eintrag
-Damit man die Seite nun auch aufrufen kann, muss in der Datei `C:\Windows\System32\drivers\etc\hosts` von Windows folgender Eintrag gemacht werden:
-
-`127.0.0.1 blog.local`
-
-Anschliessend kann man im Browser `http://blog.unvt.ch/` aufrufen und sollte die Wordpress-Seite sehen.
