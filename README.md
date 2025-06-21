@@ -187,7 +187,7 @@ kubectl get nodes
 ```
 Wenn ein Node mit dem Status Ready angezeigt wird, ist die Basisinstallation abgeschlossen und der Kubernetes-Cluster läuft einsatzbereit.
 
-## Ingress (Reverse proxy) installieren
+### Ingress (Reverse proxy) installieren
 Das ist ganz simpel mit einem einzigen Terminal-Befehl:
 ```powershell
 minikube addons enable ingress
@@ -197,3 +197,28 @@ Anschliessend muss ingress noch gestartet werden:
 minikube tunnel
 ```
 Das sorgt dafür, dass `localhost` korrekt auf den Ingress zeigt. Das Fenster muss offen bleiben, solange du testest.
+
+## Manuelles deployment
+
+Wie oben bereits erklärt, setzen wir bei allen Applikationen auf manuelles Deployment, für maximale Sauberkeit und Flexibilität. Damit eine Applikation deployed werden kann, benötigen wir mehrere `yaml-Files`. Nachfolgend dazu eine Tabelle. Der Dateiname kann natürlich beliebig gewählt werden aber es gibt gängige Standards und an diese halten wir uns in dem Projekt.
+
+| Ressource             | Dateiname       | Zweck                            |
+| --------------------- | ----------------| -------------------------------- |
+| ConfigMap             | configmap.yaml  | Konfigurationswerte (öffentlich) |
+| Secret                | secret.yaml     | Geheime Variablen (Passwörter)   |
+| PersistentVolumeClaim | pvc.yaml        | Speicher für Daten               |
+| Deployment            | deployment.yaml | Startet die App                  |
+| Service               | service.yaml    | Macht sie im Cluster erreichbar  |
+| Ingress               | ingress.yaml    | Macht sie von aussen erreichbar  |
+
+## Installation von Wordpress
+
+[Hier klicken](wordpress/README.md)
+
+## Installation von Mediawiki
+
+[Hier klicken](mediawiki/README.md)
+
+## Installation von Jira
+
+[Hier klicken](jira/README.md)
