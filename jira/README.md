@@ -24,17 +24,17 @@ Gemäss der vorgegebenen Reihenfolge muss es also so aussehen:
 
 ```powershell
 kubectl create namespace unvt-jira
-kubectl apply -f configs/postgres-secret.yaml
-kubectl apply -f configs/postgres-configmap.yaml
-kubectl apply -f configs/postgres-pvc.yaml
-kubectl apply -f configs/postgres-deployment.yaml
-kubectl apply -f configs/postgres-service.yaml
+kubectl apply -f ../jira/configs/postgres-secret.yaml
+kubectl apply -f ../jira/configs/postgres-configmap.yaml
+kubectl apply -f ../jira/configs/postgres-pvc.yaml
+kubectl apply -f ../jira/configs/postgres-deployment.yaml
+kubectl apply -f ../jira/configs/postgres-service.yaml
 
-kubectl apply -f configs/pvc.yaml
-kubectl apply -f configs/configmap.yaml
-kubectl apply -f configs/secret.yaml
-kubectl apply -f configs/deployment.yaml
-kubectl apply -f configs/service.yaml
+kubectl apply -f ../jira/configs/pvc.yaml
+kubectl apply -f ../jira/configs/configmap.yaml
+kubectl apply -f ../jira/configs/secret.yaml
+kubectl apply -f ../jira/configs/deployment.yaml
+kubectl apply -f ../jira/configs/service.yaml
 ```
 
 ## Installation prüfen Teil 1:
