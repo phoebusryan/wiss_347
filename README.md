@@ -148,27 +148,10 @@ Die aktuelle Version kann auf der offiziellen Website heruntergeladen werden:
 
 Nach dem Download einfach die Installationsdatei ausführen und den Anweisungen folgen.
 
-### Installation von kubectl
+### Installation von kubectl und helm
 
-**kubectl** muss nicht installiert, sondern lediglich heruntergeladen und eingebunden werden. Die ausführbare Datei `kubectl.exe` kann unter folgendem Link bezogen werden:  
-[https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/](https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/)
+Wir brauchen zudem noch zwei Tools (**kubectl** und **helm**), welche beide nicht installiert, sondern einfach ausgeführt werden müssen. Diese liegen dem Repository im Ordner `software` bei. Am besten ein Terminal aufmachen und in diesen Ordner wechseln, sodass man die beiden Tools ohne Umwege ausführen kann. Die ganzen nachfolgenden Schritte, insbesondere das Importieren von Configfiles, ist genau dafür vorbereitet.
 
-Erstelle einen Ordner namens `C:\kubetools` und speichere die heruntergeladene Datei darin.
-
-#### [Optional] Hinzufügen zur Umgebungsvariablen (Path)
-
-Damit `kubectl` bequem im Terminal aufgerufen werden kann, muss der Pfad zum Ordner `C:\kubetools` in die **Windows-Umgebungsvariablen** aufgenommen werden:
-
-1. Öffne das Startmenü und suche nach **„Umgebungsvariablen für dieses Konto bearbeiten“**.
-2. Im oberen Bereich („Benutzervariablen“) den Eintrag **„Path“** auswählen und auf **„Bearbeiten“** klicken.
-3. Im neuen Fenster auf **„Neu“** klicken, dann auf **„Durchsuchen“** und den Ordner `C:\kubetools` auswählen.
-4. Änderungen mit **OK** bestätigen und den Computer **neu starten**.
-
-Nach dem Neustart ein Terminal (CMD oder PowerShell) öffnen und folgenden Befehl testen:
-
-```powershell
-kubectl version --client
-```
 
 ### Kubernetes-Cluster starten
 
@@ -220,6 +203,13 @@ Die Reihenfolge, wie man die Dateien einliest, ist entscheidend!
 
 [Hier klicken](jira/README.md)
 
+## Installation von Prometheus
+
+[Hier klicken](prometheus/README.md)
+
+## Installation von Grafana
+[Hier klicken](grafana/README.md)
+
 ## Installation von Ingress (Reverse proxy)
 
 [Hier klicken](ingress/README.md)
@@ -235,6 +225,7 @@ Die Reihenfolge, wie man die Dateien einliest, ist entscheidend!
 kubectl delete namespace unvt-wordpress
 kubectl delete namespace unvt-jira
 kubectl delete namespace unvt-mediawiki
+kubectl delete namespace unvt-prometheus
 ``` 
 Das entfernt:
 - Alle Deployments
@@ -255,10 +246,10 @@ kubectl logs -l app=mediawiki -n unvt-mediawiki
 kubectl get pods -n unvt-wordpress
 kubectl get pods -n unvt-jira
 kubectl get pods -n unvt-mediawiki
+kubectl get pods -n unvt-prometheus
 ``` 
 
 ## Quellen
-- https://minikube.sigs.k8s.io/docs/tutorials/static_ip/
 - https://kubernetes.io/docs/tutorials/stateful-application/mysql-wordpress-persistent-volume/
 
 ## Probleme

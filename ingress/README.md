@@ -39,9 +39,10 @@ Nun wird für jede Applikation (Wordpress, Jira, Mediawiki) eine eigene yaml-Dat
 
 Nun lesen wir die angelegten Dateien ein
 ```powershell
-kubectl apply -f configs/wordpress-ingress.yaml
-kubectl apply -f configs/jira-ingress.yaml
-kubectl apply -f configs/mediawiki-ingress.yaml
+kubectl apply -f ../ingress/configs/wordpress-ingress.yaml
+kubectl apply -f ../ingress/configs/jira-ingress.yaml
+kubectl apply -f ../ingress/configs/mediawiki-ingress.yaml
+kubectl apply -f ../ingress/configs/prometheus-ingress.yaml
 ```
 
 ### Hosts-Datei anpassen
@@ -52,6 +53,7 @@ Am besten das ganz normale `notepad.exe` mit Administratorrechten öffnen und da
 127.0.0.1 wordpress.local
 127.0.0.1 jira.local
 127.0.0.1 mediawiki.local
+127.0.0.1 prometheus.local
 ```
 
 ### Ingress starten
@@ -64,5 +66,6 @@ Nun sollte man bequem im Browser folgende URLs aufrufen können:
 - http://wordpress.local
 - http://jira.local
 - http://mediawiki.local
+- http://prometheus.local
 
 Damit das funktioniert, muss `minikube tunnel` die ganze Zeit laufen.
