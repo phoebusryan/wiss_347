@@ -22,14 +22,14 @@ Gemäss der vorgegebenen Reihenfolge muss es also so aussehen:
 
 ```powershell
 kubectl create namespace unvt-wordpress
-kubectl apply -f configs/configmap.yaml
-kubectl apply -f configs/secret.yaml
-kubectl apply -f configs/mariadb-pvc.yaml
-kubectl apply -f configs/pvc.yaml
-kubectl apply -f configs/mariadb-deployment.yaml
-kubectl apply -f configs/deployment.yaml
-kubectl apply -f configs/mariadb-service.yaml
-kubectl apply -f configs/service.yaml
+kubectl apply -f ../wordpress/configs/configmap.yaml
+kubectl apply -f ../wordpress/configs/secret.yaml
+kubectl apply -f ../wordpress/configs/mariadb-pvc.yaml
+kubectl apply -f ../wordpress/configs/pvc.yaml
+kubectl apply -f ../wordpress/configs/mariadb-deployment.yaml
+kubectl apply -f ../wordpress/configs/deployment.yaml
+kubectl apply -f ../wordpress/configs/mariadb-service.yaml
+kubectl apply -f ../wordpress/configs/service.yaml
 ```
 
 ## Installation prüfen Teil 1:
