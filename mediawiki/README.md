@@ -14,11 +14,11 @@ Gemäss der vorgegebenen Reihenfolge muss es also so ausshene:
 
 ```powershell
 kubectl create namespace unvt-mediawiki
-kubectl apply -f configs/configmap.yaml
-kubectl apply -f configs/secret.yaml
-kubectl apply -f configs/pvc.yaml
-kubectl apply -f configs/deployment.yaml
-kubectl apply -f configs/service.yaml
+kubectl apply -f ../mediawiki/configs/configmap.yaml
+kubectl apply -f ../mediawiki/configs/secret.yaml
+kubectl apply -f ../mediawiki/configs/pvc.yaml
+kubectl apply -f ../mediawiki/configs/deployment.yaml
+kubectl apply -f ../mediawiki/configs/service.yaml
 ```
 
 ## Installation prüfen Teil 1:
