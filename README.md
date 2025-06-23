@@ -251,7 +251,14 @@ kubectl get pods -n unvt-prometheus
 ``` 
 
 ## Quellen
-- https://kubernetes.io/docs/tutorials/stateful-application/mysql-wordpress-persistent-volume/
+- https://kubernetes.io/docs/concepts/services-networking/service/
+- https://matthewpalmer.net/kubernetes-app-developer/articles/service-kubernetes-example-tutorial.html
+- https://devopscube.com/deploy-wordpress-on-kubernetes/
+- https://kubernetes.io/docs/tutorials/stateful-application/mysql-wordpress-persistent-volume
+- https://hub.docker.com/r/bitnami/wordpress 
+- https://hub.docker.com/r/atlassian/jira-software
+- https://hub.docker.com/r/prom/prometheus
+- https://hub.docker.com/r/grafana/grafana
 
 ## Probleme
 - mediawiki ist hoffnungslos veraltet und war sehr mühsam das zu installieren
