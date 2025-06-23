@@ -37,4 +37,6 @@ minikube service prometheus-service -n unvt-prometheus
 Das sollte den Browser öffnen und direkt Prometheus zeigen.
 
 ## Installation prüfen Teil 3:
-Todo: Am besten mit Grafana zusammen die Persistenz testen.
+
+## Info
+Prometheus überwacht aktuell nur Prometheus selbst und Grafana. Die übrigen Services liefern keine Metriken – daher kein Status erkennbar. Um das zu lösen benötigt man weitere Tools wie z.B. BlackBox Exporter. Man kann Prometheus und Grafana aber sehr gut testen ohne das und dieses Fass wollte ich nicht auch noch aufmachen.

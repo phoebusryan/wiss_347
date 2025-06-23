@@ -12,15 +12,7 @@ data:                                       # Hier beginnt der Datenblock mit Sc
       - job_name: 'prometheus'
         static_configs:
           - targets: ['localhost:9090']
-
-      - job_name: 'wordpress'
+      - job_name: 'grafana'
         static_configs:
-          - targets: ['wordpress-service.unvt-wordpress.svc.cluster.local:80']
-
-      - job_name: 'jira'
-        static_configs:
-          - targets: ['jira-service.unvt-jira.svc.cluster.local:80']
-
-      - job_name: 'mediawiki'
-        static_configs:
-          - targets: ['mediawiki-service.unvt-mediawiki.svc.cluster.local:80']
+          - targets:
+              - grafana-service.unvt-grafana.svc.cluster.local:80
