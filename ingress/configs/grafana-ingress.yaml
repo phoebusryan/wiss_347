@@ -1,28 +1,29 @@
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: networking.k8s.io/v1              # Verwendete API-Version für Ingress-Ressourcen
+kind: Ingress                                 # Definiert eine Ingress-Ressource
 metadata:
-  name: grafana-ingress
-  namespace: unvt-grafana
+  name: grafana-ingress                       # Name des Ingress-Objekts (wird z. B. bei 'kubectl get ingress' angezeigt)
+  namespace: unvt-grafana                     # Namespace, in dem sich dieser Ingress befindet (muss zu Service/Deployment passen)
 spec:
-  ingressClassName: nginx
-  rules:
-    - host: grafana.local
+  ingressClassName: nginx                     # Gibt an, welcher Ingress-Controller verwendet wird (hier: nginx, muss so registriert sein in der Datei "ingress-class.yaml")
+  rules:                                      # Definiert Regeln für den Ingress: Auf welchen Host hört er, wohin leitet er weiter?
+    - host: grafana.local                     # Erster Hostname (z. B. für lokalen Zugriff)
       http:
         paths:
-          - path: /
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: grafana-service
+          - path: /                           # Gilt für alle Anfragen an die Wurzel ("/")
+            pathType: ImplementationSpecific  # Art der Pfadinterpretation (standardmässig flexibel, wie bei nginx üblich)
+            backend:                          # Ziel, an das weitergeleitet wird:
+              service:                        # → ein interner Kubernetes-Service
+                name: grafana-service         # → Name des Ziel-Services (muss exakt so existieren)
                 port:
-                  number: 80
-    - host: grafana.unvt.ch
+                  number: 80                  # → Zielport im Container (grafana lauscht dort)
+
+    - host: grafana.unvt.ch                   # Zweiter Hostname (z. B. für produktionsähnliche Umgebung oder externen Zugriff)
       http:
         paths:
-          - path: /
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: grafana-service
+          - path: /                           # Gilt für alle Anfragen an die Wurzel ("/")
+            pathType: ImplementationSpecific  # Art der Pfadinterpretation (standardmässig flexibel, wie bei nginx üblich)
+            backend:                          # Ziel, an das weitergeleitet wird:
+              service:                        # → ein interner Kubernetes-Service
+                name: grafana-service         # → Name des Ziel-Services (muss exakt so existieren)
                 port:
-                  number: 9090
+                  number: 80                  # → Zielport im Container (grafana lauscht dort)

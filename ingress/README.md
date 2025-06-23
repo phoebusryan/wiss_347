@@ -43,6 +43,7 @@ kubectl apply -f ../ingress/configs/wordpress-ingress.yaml
 kubectl apply -f ../ingress/configs/jira-ingress.yaml
 kubectl apply -f ../ingress/configs/mediawiki-ingress.yaml
 kubectl apply -f ../ingress/configs/prometheus-ingress.yaml
+kubectl apply -f ../ingress/configs/grafana-ingress.yaml
 ```
 
 ### Hosts-Datei anpassen
@@ -54,6 +55,7 @@ Am besten das ganz normale `notepad.exe` mit Administratorrechten öffnen und da
 127.0.0.1 jira.local
 127.0.0.1 mediawiki.local
 127.0.0.1 prometheus.local
+127.0.0.1 grafana.local
 ```
 
 ### Ingress starten
@@ -67,5 +69,6 @@ Nun sollte man bequem im Browser folgende URLs aufrufen können:
 - http://jira.local
 - http://mediawiki.local
 - http://prometheus.local
+- http://grafana.local
 
-Damit das funktioniert, muss `minikube tunnel` die ganze Zeit laufen.
+Damit das funktioniert, muss `minikube tunnel` die ganze Zeit laufen. Der Tunnel sorgt dafür, dass Aufrufe wie http://wordpress.local vom eigenen Rechner an den richtigen Ort im Cluster weitergeleitet werden.

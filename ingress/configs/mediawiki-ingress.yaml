@@ -1,28 +1,29 @@
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: networking.k8s.io/v1                # Verwendete API-Version für Ingress-Ressourcen
+kind: Ingress                                   # Definiert eine Ingress-Ressource
 metadata:
-  name: mediawiki-ingress
-  namespace: unvt-mediawiki
+  name: mediawiki-ingress                       # Name des Ingress-Objekts (wird z. B. bei 'kubectl get ingress' angezeigt)
+  namespace: unvt-mediawiki                     # Namespace, in dem sich dieser Ingress befindet (muss zu Service/Deployment passen)
 spec:
-  ingressClassName: nginx
-  rules:
-    - host: mediawiki.local
+  ingressClassName: nginx                       # Gibt an, welcher Ingress-Controller verwendet wird (hier: nginx)
+  rules:                                        # Definiert Regeln für den Ingress: Auf welchen Host hört er, wohin leitet er weiter?
+    - host: mediawiki.local                     # Erster Hostname (z. B. für lokalen Zugriff)
       http:
         paths:
-          - path: /
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: mediawiki-service
+          - path: /                             # Gilt für alle Anfragen an die Wurzel ("/")
+            pathType: ImplementationSpecific    # Art der Pfadinterpretation (standardmässig flexibel, wie bei nginx üblich)
+            backend:                            # Ziel, an das weitergeleitet wird:
+              service:                          # → ein interner Kubernetes-Service
+                name: mediawiki-service         # → Name des Ziel-Services (muss exakt so existieren)
                 port:
-                  number: 80
-    - host: mediawiki.unvt.ch
+                  number: 80                    # → Zielport im Container (mediawiki lauscht dort)
+
+    - host: mediawiki.unvt.ch                   # Zweiter Hostname (z. B. für produktionsähnliche Umgebung oder externen Zugriff)
       http:
         paths:
-          - path: /
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: mediawiki-service
+          - path: /                             # Gilt für alle Anfragen an die Wurzel ("/")
+            pathType: ImplementationSpecific    # Art der Pfadinterpretation (standardmässig flexibel, wie bei nginx üblich)
+            backend:                            # Ziel, an das weitergeleitet wird:
+              service:                          # → ein interner Kubernetes-Service
+                name: mediawiki-service         # → Name des Ziel-Services (muss exakt so existieren)
                 port:
-                  number: 80
+                  number: 80                    # → Zielport im Container (mediawiki lauscht dort)

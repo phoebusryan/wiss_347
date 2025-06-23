@@ -1,6 +1,6 @@
-apiVersion: networking.k8s.io/v1
-kind: IngressClass
+apiVersion: networking.k8s.io/v1             # API-Version für IngressClass
+kind: IngressClass                           # Objekt-Typ: Definiert eine Klasse für Ingress
 metadata:
-  name: nginx
+  name: nginx                                # Name der Klasse, z. B. "nginx"
 spec:
-  controller: k8s.io/ingress-nginx
+  controller: k8s.io/ingress-nginx           # Der Name des Controllers, der diese Klasse verwalten soll
