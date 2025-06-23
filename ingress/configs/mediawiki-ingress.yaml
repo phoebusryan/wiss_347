@@ -16,3 +16,13 @@ spec:
                 name: mediawiki-service
                 port:
                   number: 80
+    - host: mediawiki.unvt.ch
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: mediawiki-service
+                port:
+                  number: 80

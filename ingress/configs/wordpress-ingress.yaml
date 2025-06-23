@@ -16,3 +16,13 @@ spec:
                 name: wordpress-service
                 port:
                   number: 80
+    - host: wordpress.unvt.ch
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: wordpress-service
+                port:
+                  number: 80

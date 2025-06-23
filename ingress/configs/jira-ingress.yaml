@@ -16,3 +16,13 @@ spec:
                 name: jira-service
                 port:
                   number: 80
+    - host: jira.unvt.ch
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: jira-service
+                port:
+                  number: 80
