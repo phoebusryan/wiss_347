@@ -1,11 +1,11 @@
-apiVersion: v1
-kind: PersistentVolumeClaim
+apiVersion: v1                               # Genutzte API-Version, es gibt aktuell nur Version 1
+kind: PersistentVolumeClaim                  # Fordert Speicherplatz beim Cluster an
 metadata:
-  name: jira-pvc
-  namespace: unvt-jira
+  name: jira-pvc                             # Interner Name für den PVC. Muss genau so auch im deployment.yaml genutzt werden.
+  namespace: unvt-jira                       # Zugehöriger Namespace. Muss überall gleich sein
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteOnce                          # Nur ein Node darf gleichzeitig schreiben
   resources:
     requests:
       storage: 10Gi                          # Speichergrösse (in dem Fall 10 Gibibyte)
