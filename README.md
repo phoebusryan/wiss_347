@@ -246,6 +246,12 @@ kubectl get pods -n unvt-jira
 kubectl get pods -n unvt-mediawiki
 kubectl get pods -n unvt-prometheus
 kubectl get pods -n unvt-grafana
+kubectl get pods --all-namespaces
+``` 
+
+### deployment neu laden
+```powershell
+kubectl rollout restart deployment wordpress -n unvt-wordpress
 ``` 
 
 ## Quellen

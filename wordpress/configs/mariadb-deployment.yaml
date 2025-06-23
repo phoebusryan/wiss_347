@@ -27,7 +27,20 @@ spec:
               name: wordpress-secret
               key: MARIADB_ROOT_PASSWORD
         - name: MARIADB_DATABASE
-          value: bitnami_wordpress
+          valueFrom:
+            configMapKeyRef:
+              name: wordpress-config
+              key: WORDPRESS_DB_NAME
+        - name: MARIADB_USER
+          valueFrom:
+            configMapKeyRef:
+              name: wordpress-config
+              key: WORDPRESS_DB_USER
+        - name: MARIADB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: wordpress-secret
+              key: WORDPRESS_DB_PASSWORD
         volumeMounts:
         - name: mariadb-storage
           mountPath: /bitnami/mariadb

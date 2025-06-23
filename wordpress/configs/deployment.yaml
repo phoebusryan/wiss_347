@@ -15,27 +15,34 @@ spec:
     spec:
       containers:
         - name: wordpress
-          image: bitnami/wordpress
+          image: bitnami/wordpress:latest
           ports:
             - containerPort: 8080
           env:
-            - name: WORDPRESS_DB_HOST
+            - name: WORDPRESS_DATABASE_HOST
               valueFrom:
                 configMapKeyRef:
                   name: wordpress-config
                   key: WORDPRESS_DB_HOST
-            - name: WORDPRESS_DB_NAME
+            - name: WORDPRESS_DATABASE_NAME
               valueFrom:
                 configMapKeyRef:
                   name: wordpress-config
                   key: WORDPRESS_DB_NAME
-            - name: WORDPRESS_DB_USER
+            - name: WORDPRESS_DATABASE_USER
               valueFrom:
                 configMapKeyRef:
                   name: wordpress-config
                   key: WORDPRESS_DB_USER
-            - name: WORDPRESS_DB_PASSWORD
+            - name: WORDPRESS_DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: wordpress-secret
                   key: WORDPRESS_DB_PASSWORD
+          volumeMounts:
+            - name: wordpress-persistent-storage
+              mountPath: /bitnami/wordpress
+      volumes:
+        - name: wordpress-persistent-storage
+          persistentVolumeClaim:
+            claimName: wordpress-pvc
