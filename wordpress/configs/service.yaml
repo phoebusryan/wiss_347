@@ -1,12 +1,12 @@
-apiVersion: v1
+apiVersion: v1                               # Genutzte API-Version, es gibt aktuell nur Version 1
 kind: Service                                # Erzeugt interne Netzwerkschnittstelle
 metadata:
-  name: wordpress-service
-  namespace: unvt-wordpress
+  name: wordpress-service                    # Interner Name für den Service. Muss genau so auch im deployment.yaml genutzt werden.
+  namespace: unvt-wordpress                  # Zugehöriger Namespace. Muss überall gleich sein
 spec:
-  type: ClusterIP                            # Interner Service (kein externer Zugriff)
+  type: ClusterIP                            # Interner Service (kein externer Zugriff). Kann auch weggelassen werden, da ClusterIP der default ist.
   selector:
-    app: wordpress                           # Sucht Pods mit diesem Label
+    app: wordpress                           # Sucht Pods mit diesem Label. Muss genau so auch im deployment.yaml genutzt werden.
   ports:
   - port: 80                                 # Service-Port im Cluster
-    targetPort: 8080                         # Weiterleitung an Container-Port
+    targetPort: 8080                         # Weiterleitung an Container-Port; die Applikation gibt diesen vor. Findet man in der jeweiligen Dokumentation

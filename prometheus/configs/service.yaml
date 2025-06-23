@@ -1,11 +1,12 @@
-apiVersion: v1
-kind: Service
+apiVersion: v1                               # Genutzte API-Version, es gibt aktuell nur Version 1
+kind: Service                                # Erzeugt interne Netzwerkschnittstelle
 metadata:
-  name: prometheus-service
-  namespace: unvt-prometheus
+  name: prometheus-service                   # Interner Name für den Service. Muss genau so auch im deployment.yaml genutzt werden.
+  namespace: unvt-prometheus                 # Zugehöriger Namespace. Muss überall gleich sein
 spec:
+  type: ClusterIP                            # Interner Service (kein externer Zugriff). Kann auch weggelassen werden, da ClusterIP der default ist.
   selector:
-    app: prometheus
-  ports:
-    - port: 80
-      targetPort: 9090
+    app: prometheus                          # Sucht Pods mit diesem Label. Muss genau so auch im deployment.yaml genutzt werden.
+  ports: 
+    - port: 80                               # Service-Port im Cluster
+      targetPort: 9090                       # Weiterleitung an Container-Port; die Applikation gibt diesen vor. Findet man in der jeweiligen Dokumentation
