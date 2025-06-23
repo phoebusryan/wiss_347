@@ -15,41 +15,27 @@ spec:
     spec:
       containers:
         - name: wordpress
-          image: bitnami/wordpress:latest
+          image: bitnami/wordpress
           ports:
             - containerPort: 8080
           env:
-            - name: WORDPRESS_USERNAME
-              value: admin
-            - name: WORDPRESS_PASSWORD
-              value: admin123
-            - name: WORDPRESS_EMAIL
-              value: admin@example.com
-            - name: WORDPRESS_FIRST_NAME
-              value: Admin
-            - name: WORDPRESS_LAST_NAME
-              value: User
-            - name: WORDPRESS_BLOG_NAME
-              value: "My WordPress Blog"
-            - name: WORDPRESS_SKIP_INSTALL
-              value: "no"
-            - name: WORDPRESS_DATABASE_HOST
-              value: mariadb-service
-            - name: WORDPRESS_DATABASE_PORT_NUMBER
-              value: "3306"
-            - name: WORDPRESS_DATABASE_NAME
-              value: bitnami_wordpress
-            - name: WORDPRESS_DATABASE_USER
-              value: root
-            - name: WORDPRESS_DATABASE_PASSWORD
+            - name: WORDPRESS_DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: wordpress-config
+                  key: WORDPRESS_DB_HOST
+            - name: WORDPRESS_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: wordpress-config
+                  key: WORDPRESS_DB_NAME
+            - name: WORDPRESS_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: wordpress-config
+                  key: WORDPRESS_DB_USER
+            - name: WORDPRESS_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: wordpress-secret
                   key: WORDPRESS_DB_PASSWORD
-          volumeMounts:
-            - name: wordpress-persistent-storage
-              mountPath: /bitnami/wordpress
-      volumes:
-        - name: wordpress-persistent-storage
-          persistentVolumeClaim:
-            claimName: wordpress-pvc

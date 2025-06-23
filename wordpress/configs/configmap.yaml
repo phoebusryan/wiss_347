@@ -4,9 +4,6 @@ metadata:
   name: wordpress-config                    # Interner Name der ConfigMap, über den sie im Deployment referenziert wird
   namespace: unvt-wordpress                 # Namespace, in dem die ConfigMap gespeichert ist (muss zu den anderen Ressourcen passen)
 data:                                       # Hier beginnt der Datenblock mit Schlüssel-Wert-Paaren
-  WORDPRESS_BLOG_NAME: "Schulprojekt"
-  WORDPRESS_EMAIL: "admin@example.com"
-  WORDPRESS_USERNAME: "admin"
-  WORDPRESS_DATABASE_NAME: "bitnami_wordpress"
-  WORDPRESS_DATABASE_USER: "root"
-  WORDPRESS_DATABASE_HOST: "mariadb-service"
+  WORDPRESS_DB_HOST: mariadb-service
+  WORDPRESS_DB_NAME: wordpress
+  WORDPRESS_DB_USER: wpuser
