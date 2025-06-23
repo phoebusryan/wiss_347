@@ -258,9 +258,13 @@ kubectl get pods -n unvt-grafana
 - https://hub.docker.com/r/atlassian/jira-software
 - https://hub.docker.com/r/prom/prometheus
 - https://hub.docker.com/r/grafana/grafana
-- ChatGPT als Einstiegshilfe, Unterstützung bei Fehlern sowie dem Erstellen der deployment.yaml-Files, weil diese sehr unterschiedlich sind.
+- ChatGPT
+    - Einstiegshilfe
+    - Unterstützung bei Fehlern
+    - Erstellen/Bearbeiten der deployment.yaml-Files, weil diese sehr unterschiedlich sind
+    - Generieren der Kommentarea für die restlichen yaml-Files
 
 ## Probleme
 - mediawiki ist hoffnungslos veraltet, was es sehr mühsam machte, es zu installieren da, da z.B. Images oder Server nicht mehr erreichbar waren.
 - Jira benötigt einen Account für das Setup. Es war also tatsächlich notwendig, sich zu registrieren. Das habe ich sogar gemacht aber dann wurde ich aufgefordert eine Cloud-Lizenz zu buchen, weil es die lokale Version nicht mehr gibt.
-- Mit PortForwarding lief Jira und Wordpress sehr schnell. Ingress hat aber extreme Probleme bereitet, was schlussendlich an der Art und weise lag, wie ich Ingress installiert habe `minikube addons enable ingress` statt via `Helm`. Mit Helm hat es wunderbar geklappt.
+- Mit PortForwarding lief Jira und Wordpress sehr schnell. Ingress hat aber extreme Probleme bereitet, was schlussendlich an der Art und weise lag, wie ich Ingress installiert habe `minikube addons enable ingress` statt via `Helm`. Mit Helm hat es wunderbar geklappt. Das liegt wohl daran, dass Helm schon sehr viel vorkonfiguriert.
