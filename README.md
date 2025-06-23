@@ -255,6 +255,7 @@ kubectl get pods -n unvt-prometheus
 - https://matthewpalmer.net/kubernetes-app-developer/articles/service-kubernetes-example-tutorial.html
 - https://devopscube.com/deploy-wordpress-on-kubernetes/
 - https://kubernetes.io/docs/tutorials/stateful-application/mysql-wordpress-persistent-volume
+- https://kubernetes.io/docs/tasks/access-application-cluster/ingress-minikube/
 - https://hub.docker.com/r/bitnami/wordpress 
 - https://hub.docker.com/r/atlassian/jira-software
 - https://hub.docker.com/r/prom/prometheus
@@ -264,4 +265,4 @@ kubectl get pods -n unvt-prometheus
 ## Probleme
 - mediawiki ist hoffnungslos veraltet und war sehr mühsam das zu installieren
 - Jira benötigt einen Account für das Setup. Es war also tatsächlich notwendig, sich zu registrieren. Das habe ich sogar gemacht aber dann wurde ich aufgefordert eine Cloud-Lizenz zu buchen, weil es die lokale Version nicht mehr gibt.
-- Mit PortForwarding lief Jira und Wordpress sehr schnell. Ingress hat aber extreme Probleme bereitet, was schlussendlich an der Art und weise lag, wie ich Ingress installiert habe "minikube enable addon ingress" statt via Helm. Mit Helm hat es wunderbar geklappt.
+- Mit PortForwarding lief Jira und Wordpress sehr schnell. Ingress hat aber extreme Probleme bereitet, was schlussendlich an der Art und weise lag, wie ich Ingress installiert habe `minikube addons enable ingress` statt via `Helm`. Mit Helm hat es wunderbar geklappt.
