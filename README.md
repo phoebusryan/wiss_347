@@ -285,3 +285,4 @@ kubectl rollout restart deployment wordpress -n unvt-wordpress
 - Auch das mit der Datei `LocalSettings.php`, die jedes Mal geladen werden muss, ist mühsam, da ich mich so auch noch mit `initContainers-Scripts` auseinader setzen musste.
 - Jira benötigt einen Account für das Setup. Es war also tatsächlich notwendig, sich zu registrieren. Das habe ich sogar gemacht aber dann wurde ich aufgefordert eine Cloud-Lizenz zu buchen, weil es die lokale Version nicht mehr gibt.
 - Mit PortForwarding lief Jira und Wordpress sehr schnell. Ingress hat aber extreme Probleme bereitet, was schlussendlich an der Art und weise lag, wie ich Ingress installiert habe `minikube addons enable ingress` statt via `Helm`. Mit Helm hat es wunderbar geklappt. Das liegt wohl daran, dass Helm schon sehr viel vorkonfiguriert.
+- Das Verknüpfen von Prometheus und Grafana war auch nochmal etwas neues und da musste ich mich erst reinarbeiten.

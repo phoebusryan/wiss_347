@@ -10,13 +10,21 @@ Wie im Hauptkapitel erwähnt, benötigen wir für das manuelle Deployment mindes
 | Deployment            | deployment.yaml         | Startet die App                  |
 | Service               | service.yaml            | Macht sie im Cluster erreichbar  |
 
+Gradana benötigt jedoch für die Kommunikation noch eine weitere Datei:
+
+| Ressource             | Dateiname               | Zweck                            |
+| --------------------- | ----------------------- | -------------------------------- |
+| data provisioning     | data-provisioning.yaml  | Enthält Infos über Prometheus    |
+
 Gemäss der vorgegebenen Reihenfolge muss es also so aussehen:
 
 ```powershell
+kubectl delete namespace unvt-grafana
 kubectl create namespace unvt-grafana
 kubectl apply -f ../grafana/configs/configmap.yaml
 kubectl apply -f ../grafana/configs/secret.yaml
 kubectl apply -f ../grafana/configs/pvc.yaml
+kubectl apply -f ../grafana/configs/data-provisioning.yaml
 kubectl apply -f ../grafana/configs/deployment.yaml
 kubectl apply -f ../grafana/configs/service.yaml
 ```
@@ -37,4 +45,5 @@ minikube service grafana-service -n unvt-grafana
 Das sollte den Browser öffnen und direkt grafana zeigen.
 
 ## Installation prüfen Teil 3:
-Todo: Am besten mit Grafana zusammen die Persistenz testen.
+
+Im Browser ging ein Fenster auf mit einer URL. Vermutlich etwas wie `http://127.0.0.1:54087/`. Da muss man sich nun einloggen, sodass man ins Backend kommt. Die Zugangsdaten stehen in der Datei `secret.yaml`. 

@@ -22,15 +22,14 @@ spec:
             - secretRef:
                 name: grafana-secret
           volumeMounts:
-            - name: config
-              mountPath: /etc/grafana/grafana.ini
-              subPath: grafana.ini
             - name: storage
               mountPath: /var/lib/grafana
+            - name: datasource-config
+              mountPath: /etc/grafana/provisioning/datasources
       volumes:
-        - name: config
-          configMap:
-            name: grafana-config
         - name: storage
           persistentVolumeClaim:
-            claimName: grafana-pvc
+            claimName: grafana-pvc 
+        - name: datasource-config
+          configMap:
+            name: grafana-datasource
