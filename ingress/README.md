@@ -2,9 +2,7 @@
 
 ## Installation von Helm
 
-Wir benutzen nun **Helm**. Helm ist ein Paketmanager, der die Verwaltung, Installation und Aktualisierung von Kubernetes-Anwendungen vereinfacht. Helm muss nicht klassisch installiert werden, sondern wird lediglich heruntergeladen und eingebunden. Die passende Version für Windows (amd64) kann hier heruntergeladen werden:  [https://github.com/helm/helm/releases](https://github.com/helm/helm/releases)
-
-Nach dem Download das ZIP-Archiv entpacken, ein Terminal (CMD oder PowerShell) öffnen und mit folgendem Befehl prüfen, ob Helm korrekt funktioniert:
+Wir benutzen nun **Helm**. Helm ist ein Paketmanager, der die Verwaltung, Installation und Aktualisierung von Kubernetes-Anwendungen vereinfacht. Helm muss nicht klassisch installiert werden, sondern wird lediglich heruntergeladen und eingebunden. Die passende Version für Windows (amd64) ist in diesem Repository im Ordner `software` zu finden. Ob es funktioniert, kann man ganz einfach mit einem Terminal rausfinden:
 
 ```powershell
 helm version

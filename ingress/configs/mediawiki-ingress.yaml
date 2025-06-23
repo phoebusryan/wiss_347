@@ -16,14 +16,3 @@ spec:
                 name: mediawiki-service         # → Name des Ziel-Services (muss exakt so existieren)
                 port:
                   number: 80                    # → Zielport im Container (mediawiki lauscht dort)
-
-    - host: mediawiki.unvt.ch                   # Zweiter Hostname (z. B. für produktionsähnliche Umgebung oder externen Zugriff)
-      http:
-        paths:
-          - path: /                             # Gilt für alle Anfragen an die Wurzel ("/")
-            pathType: ImplementationSpecific    # Art der Pfadinterpretation (standardmässig flexibel, wie bei nginx üblich)
-            backend:                            # Ziel, an das weitergeleitet wird:
-              service:                          # → ein interner Kubernetes-Service
-                name: mediawiki-service         # → Name des Ziel-Services (muss exakt so existieren)
-                port:
-                  number: 80                    # → Zielport im Container (mediawiki lauscht dort)
