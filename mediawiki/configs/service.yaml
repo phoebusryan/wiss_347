@@ -9,4 +9,4 @@ spec:
     app: mediawiki                           # Sucht Pods mit diesem Label. Muss genau so auch im deployment.yaml genutzt werden.
   ports:
   - port: 80                                 # Service-Port im Cluster
-    targetPort: 8080                         # Weiterleitung an Container-Port; die Applikation gibt diesen vor. Findet man in der jeweiligen Dokumentation
+    targetPort: 80                           # Weiterleitung an Container-Port; die Applikation gibt diesen vor. Findet man in der jeweiligen Dokumentation

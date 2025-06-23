@@ -4,8 +4,8 @@ metadata:
   name: mediawiki-config                    # Interner Name der ConfigMap, über den sie im Deployment referenziert wird
   namespace: unvt-mediawiki                 # Namespace, in dem die ConfigMap gespeichert ist (muss zu den anderen Ressourcen passen)
 data:                                       # Hier beginnt der Datenblock mit Schlüssel-Wert-Paaren
-  MEDIAWIKI_SITE_NAME: "SchulWiki"
+  MEDIAWIKI_SITE_NAME: "Intranet"
   MEDIAWIKI_SITE_LANG: "de"
   MEDIAWIKI_DB_NAME: "mediawiki"
-  MEDIAWIKI_DB_USER: "root"
+  MEDIAWIKI_DB_USER: "mwuser"
   MEDIAWIKI_DB_HOST: "mariadb-service"

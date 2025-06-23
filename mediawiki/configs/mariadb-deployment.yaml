@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+  namespace: unvt-mediawiki
+  labels:
+    app: mariadb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+      - name: mariadb
+        image: bitnami/mariadb:latest
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MARIADB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mediawiki-secret
+              key: MARIADB_ROOT_PASSWORD
+        - name: MARIADB_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: mediawiki-config
+              key: MEDIAWIKI_DB_NAME
+        - name: MARIADB_USER
+          valueFrom:
+            configMapKeyRef:
+              name: mediawiki-config
+              key: MEDIAWIKI_DB_USER
+        - name: MARIADB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mediawiki-secret
+              key: MEDIAWIKI_DB_PASSWORD
+        volumeMounts:
+        - name: mariadb-storage
+          mountPath: /bitnami/mariadb
+      volumes:
+      - name: mariadb-storage
+        persistentVolumeClaim:
+          claimName: mariadb-pvc
