@@ -192,26 +192,21 @@ Die Reihenfolge, wie man die Dateien einliest, ist entscheidend!
 4. Deployments
 
 ## Installation von Wordpress
-
 [Hier klicken](wordpress/README.md)
 
 ## Installation von Mediawiki
-
 [Hier klicken](mediawiki/README.md)
 
 ## Installation von Jira
-
 [Hier klicken](jira/README.md)
 
 ## Installation von Prometheus
-
 [Hier klicken](prometheus/README.md)
 
 ## Installation von Grafana
 [Hier klicken](grafana/README.md)
 
 ## Installation von Ingress (Reverse proxy)
-
 [Hier klicken](ingress/README.md)
 
 ## Hilfreiche Tipps und Befehle
@@ -226,6 +221,7 @@ kubectl delete namespace unvt-wordpress
 kubectl delete namespace unvt-jira
 kubectl delete namespace unvt-mediawiki
 kubectl delete namespace unvt-prometheus
+kubectl delete namespace unvt-grafana
 ``` 
 Das entfernt:
 - Alle Deployments
@@ -240,6 +236,7 @@ kubectl logs -l app=wordpress -n unvt-wordpress
 kubectl logs -l app=jira -n unvt-jira
 kubectl logs -l app=mediawiki -n unvt-mediawiki
 kubectl logs -l app=prometheus -n unvt-prometheus
+kubectl logs -l app=grafana -n unvt-grafana
 ``` 
 
 ### laufende Pods prüfen
@@ -248,6 +245,7 @@ kubectl get pods -n unvt-wordpress
 kubectl get pods -n unvt-jira
 kubectl get pods -n unvt-mediawiki
 kubectl get pods -n unvt-prometheus
+kubectl get pods -n unvt-grafana
 ``` 
 
 ## Quellen
@@ -263,6 +261,6 @@ kubectl get pods -n unvt-prometheus
 - ChatGPT als Einstiegshilfe und Unterstützung bei Fehlern
 
 ## Probleme
-- mediawiki ist hoffnungslos veraltet und war sehr mühsam das zu installieren
+- mediawiki ist hoffnungslos veraltet, was es sehr mühsam machte, es zu installieren da, da z.B. Images oder Server nicht mehr erreichbar waren.
 - Jira benötigt einen Account für das Setup. Es war also tatsächlich notwendig, sich zu registrieren. Das habe ich sogar gemacht aber dann wurde ich aufgefordert eine Cloud-Lizenz zu buchen, weil es die lokale Version nicht mehr gibt.
 - Mit PortForwarding lief Jira und Wordpress sehr schnell. Ingress hat aber extreme Probleme bereitet, was schlussendlich an der Art und weise lag, wie ich Ingress installiert habe `minikube addons enable ingress` statt via `Helm`. Mit Helm hat es wunderbar geklappt.
