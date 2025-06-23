@@ -1,9 +1,9 @@
-apiVersion: v1
-kind: ConfigMap
+apiVersion: v1                              # API-Version für Konfigurationsdaten; ConfigMaps sind in v1 enthalten
+kind: ConfigMap                             # Der Typ dieses Kubernetes-Objekts: eine ConfigMap (Konfigurationsdaten)
 metadata:
-  name: grafana-config
-  namespace: unvt-grafana
-data:
+  name: grafana-config                      # Interner Name der ConfigMap, über den sie im Deployment referenziert wird
+  namespace: unvt-grafana                   # Namespace, in dem die ConfigMap gespeichert ist (muss zu den anderen Ressourcen passen)
+data:                                       # Hier beginnt der Datenblock mit Schlüssel-Wert-Paaren
   grafana.ini: |
     [server]
     root_url = http://localhost:3000

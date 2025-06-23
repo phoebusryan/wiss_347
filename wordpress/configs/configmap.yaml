@@ -1,9 +1,9 @@
-apiVersion: v1
-kind: ConfigMap
+apiVersion: v1                              # API-Version für Konfigurationsdaten; ConfigMaps sind in v1 enthalten
+kind: ConfigMap                             # Der Typ dieses Kubernetes-Objekts: eine ConfigMap (Konfigurationsdaten)
 metadata:
-  name: wordpress-config
-  namespace: unvt-wordpress
-data:
+  name: wordpress-config                    # Interner Name der ConfigMap, über den sie im Deployment referenziert wird
+  namespace: unvt-wordpress                 # Namespace, in dem die ConfigMap gespeichert ist (muss zu den anderen Ressourcen passen)
+data:                                       # Hier beginnt der Datenblock mit Schlüssel-Wert-Paaren
   WORDPRESS_BLOG_NAME: "Schulprojekt"
   WORDPRESS_EMAIL: "admin@example.com"
   WORDPRESS_USERNAME: "admin"
