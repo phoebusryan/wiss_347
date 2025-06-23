@@ -259,6 +259,7 @@ kubectl get pods -n unvt-prometheus
 - https://hub.docker.com/r/atlassian/jira-software
 - https://hub.docker.com/r/prom/prometheus
 - https://hub.docker.com/r/grafana/grafana
+- ChatGPT als Einstiegshilfe und Unterstützung bei Fehlern
 
 ## Probleme
 - mediawiki ist hoffnungslos veraltet und war sehr mühsam das zu installieren
