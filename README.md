@@ -239,6 +239,7 @@ Das entfernt:
 kubectl logs -l app=wordpress -n unvt-wordpress
 kubectl logs -l app=jira -n unvt-jira
 kubectl logs -l app=mediawiki -n unvt-mediawiki
+kubectl logs -l app=prometheus -n unvt-prometheus
 ``` 
 
 ### laufende Pods prüfen
@@ -255,4 +256,4 @@ kubectl get pods -n unvt-prometheus
 ## Probleme
 - mediawiki ist hoffnungslos veraltet und war sehr mühsam das zu installieren
 - Jira benötigt einen Account für das Setup. Es war also tatsächlich notwendig, sich zu registrieren. Das habe ich sogar gemacht aber dann wurde ich aufgefordert eine Cloud-Lizenz zu buchen, weil es die lokale Version nicht mehr gibt.
-- Mit PortForwarding lief Jira und Wordpress sehr schnell. Ingress hat aber extreme Probleme bereitet.
+- Mit PortForwarding lief Jira und Wordpress sehr schnell. Ingress hat aber extreme Probleme bereitet, was schlussendlich an der Art und weise lag, wie ich Ingress installiert habe "minikube enable addon ingress" statt via Helm. Mit Helm hat es wunderbar geklappt.
