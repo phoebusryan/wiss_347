@@ -21,7 +21,6 @@ Mediawiki benötigt jedoch noch ein paar weitere Dateien, weil es eine `MariaDB`
 Gemäss der vorgegebenen Reihenfolge muss es also so aussehen:
 
 ```powershell
-kubectl delete namespace unvt-mediawiki
 kubectl create namespace unvt-mediawiki
 kubectl apply -f ../mediawiki/configs/configmap.yaml
 kubectl apply -f ../mediawiki/configs/secret.yaml
