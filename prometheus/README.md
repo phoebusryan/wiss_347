@@ -10,13 +10,13 @@ Wie im Hauptkapitel erwähnt, benötigen wir für das manuelle Deployment mindes
 | Deployment            | deployment.yaml         | Startet die App                  |
 | Service               | service.yaml            | Macht sie im Cluster erreichbar  |
 
-Prometheus benötigt aber weder persistenzen Datenspeicher, noch lässt es sich gross konfigurieren. Wir benötigen somit nur die Dateien `secret.yaml`, `deployment.yaml` und `service.yaml`
-
+Gemäss der vorgegebenen Reihenfolge muss es also so aussehen:
 
 ```powershell
 kubectl create namespace unvt-prometheus
 kubectl apply -f ../prometheus/configs/configmap.yaml
 kubectl apply -f ../prometheus/configs/secret.yaml
+kubectl apply -f ../prometheus/configs/pvc.yaml
 kubectl apply -f ../prometheus/configs/deployment.yaml
 kubectl apply -f ../prometheus/configs/service.yaml
 ```
@@ -35,3 +35,6 @@ minikube service prometheus-service -n unvt-prometheus
 ```
 
 Das sollte den Browser öffnen und direkt Prometheus zeigen.
+
+## Installation prüfen Teil 3:
+Todo: Am besten mit Grafana zusammen die Persistenz testen.
