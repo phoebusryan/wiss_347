@@ -1,8 +1,8 @@
 apiVersion: v1                               # Genutzte API-Version, es gibt aktuell nur Version 1
 kind: PersistentVolumeClaim                  # Fordert Speicherplatz beim Cluster an
 metadata:
-  name: grafana-pvc                        # Interner Name für den PVC. Muss genau so auch im deployment.yaml genutzt werden.
-  namespace: unvt-grafana                  # Zugehöriger Namespace. Muss überall gleich sein
+  name: grafana-pvc                          # Interner Name für den PVC. Muss genau so auch im deployment.yaml genutzt werden.
+  namespace: unvt-grafana                    # Zugehöriger Namespace. Muss überall gleich sein
 spec:
   accessModes:
     - ReadWriteOnce                          # Nur ein Node darf gleichzeitig schreiben
