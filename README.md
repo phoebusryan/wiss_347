@@ -258,7 +258,7 @@ kubectl get pods -n unvt-grafana
 - https://hub.docker.com/r/atlassian/jira-software
 - https://hub.docker.com/r/prom/prometheus
 - https://hub.docker.com/r/grafana/grafana
-- ChatGPT als Einstiegshilfe und Unterstützung bei Fehlern
+- ChatGPT als Einstiegshilfe, Unterstützung bei Fehlern sowie dem Erstellen der deployment.yaml-Files, weil diese sehr unterschiedlich sind.
 
 ## Probleme
 - mediawiki ist hoffnungslos veraltet, was es sehr mühsam machte, es zu installieren da, da z.B. Images oder Server nicht mehr erreichbar waren.
