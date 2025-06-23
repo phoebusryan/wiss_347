@@ -19,7 +19,6 @@ Gradana benötigt jedoch für die Kommunikation noch eine weitere Datei:
 Gemäss der vorgegebenen Reihenfolge muss es also so aussehen:
 
 ```powershell
-kubectl delete namespace unvt-grafana
 kubectl create namespace unvt-grafana
 kubectl apply -f ../grafana/configs/configmap.yaml
 kubectl apply -f ../grafana/configs/secret.yaml
