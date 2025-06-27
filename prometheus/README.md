@@ -10,6 +10,8 @@ Wie im Hauptkapitel erwähnt, benötigen wir für das manuelle Deployment mindes
 | Deployment            | deployment.yaml         | Startet die App                  |
 | Service               | service.yaml            | Macht sie im Cluster erreichbar  |
 
+Prometheus kann standardmässig nur Services überwachen, die eigene Metriken liefern. Zum Beispiel Grafana macht das. Damit wir aber auch eigene Services überwachen können, benötigen wir ein Addon für Prometheus: `Blackbox Exporter`.  Dies funktioniert ganz einfach mit einem eigenen Deployment-File: `blackbox-exporter-deployment.yaml`. Das muss logischerweise nach der Installation von prometheus installiert werden. In der `configmap.yaml` kann man aber trotzdem schon die einzelnen Services eintragen.
+
 Gemäss der vorgegebenen Reihenfolge muss es also so aussehen:
 
 ```powershell
@@ -19,6 +21,7 @@ kubectl apply -f ../prometheus/configs/secret.yaml
 kubectl apply -f ../prometheus/configs/pvc.yaml
 kubectl apply -f ../prometheus/configs/deployment.yaml
 kubectl apply -f ../prometheus/configs/service.yaml
+kubectl apply -f ../prometheus/configs/blackbox-exporter-deployment.yaml
 ```
 
 ## Installation prüfen Teil 1:
@@ -39,4 +42,4 @@ Das sollte den Browser öffnen und direkt Prometheus zeigen.
 ## Installation prüfen Teil 3:
 
 ## Info
-Prometheus überwacht aktuell nur Prometheus selbst und Grafana. Die übrigen Services liefern keine Metriken – daher kein Status erkennbar. Um das zu lösen benötigt man weitere Tools wie z.B. BlackBox Exporter. Man kann Prometheus und Grafana aber sehr gut testen ohne das und dieses Fass wollte ich nicht auch noch aufmachen.
+Mit dem Befehl `up` kann man den Status aller Services sehen, die überwacht werden. Ganz am Ende der Zeile erscheint eine **1** oder **0** für online bzw. offline. Wenn man also einen POD löscht oder neustartet, sieht man das dort. Mit dem Befehl `probe_success{job="wordpress-http"}` kann man z.B. einen bestimmten Service checken.

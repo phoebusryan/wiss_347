@@ -16,3 +16,17 @@ data:                                       # Hier beginnt der Datenblock mit Sc
         static_configs:
           - targets:
               - grafana-service.unvt-grafana.svc.cluster.local:80
+      - job_name: 'wordpress-http'
+        metrics_path: /probe
+        params:
+          module: [http_2xx]
+        static_configs:
+          - targets:
+            - http://wordpress-service.unvt-wordpress.svc.cluster.local
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: __param_target
+          - source_labels: [__param_target]
+            target_label: instance
+          - target_label: __address__
+            replacement: blackbox-exporter.unvt-prometheus.svc.cluster.local:9115
